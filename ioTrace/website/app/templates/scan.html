@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Scan{% endblock %}
+{% block body %}
+
+<body>
+<p> Tryk på start for at scanne dit netværk </p>
+<p> Du vil automatisk bliv viderstillet når dit resultat er klar </p>
+
+<a href="{{ url_for('scanner') }}" class="btn btn-outline-secondary" role="button">Start</a>
+</body>
+
+{% endblock %}
+
