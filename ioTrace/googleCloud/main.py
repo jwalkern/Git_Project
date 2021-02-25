@@ -33,8 +33,8 @@ def create():
 
 @app.route('/read', methods=['GET'])
 def read():
-    
-    get_device()
+    if request.method == 'GET':
+        return get_device()
     
     return render_template('read.html')
 
