@@ -1,51 +1,65 @@
-import datetime
-
+import os
 from flask import Flask, render_template
-from google.cloud import datastore
+import pymysql
 
-datastore_client = datastore.Client()
+
+db_user = os.environ.get('CLOUD_SQL_USERNAME')
+db_password = os.environ.get('CLOUD_SQL_PASSWORD')
+db_name = os.environ.get('CLOUD_SQL_DATABASE_NAME')
+db_connection_name = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
+
 app = Flask(__name__)
 
 
-def store_time(dt):
-    entity = datastore.Entity(key=datastore_client.key('visit'))
-    entity.update({
-        'timestamp': dt
-    })
-
-    datastore_client.put(entity)
-
-def fetch_times(limit):
-    query = datastore_client.query(kind='visit')
-    query.order = ['-timestamp']
-
-    times = query.fetch(limit=limit)
-
-    return times
-
-
-
-
-
-
+#Dette er vores startside og viser index.html 
 @app.route('/')
-def root():
-    # Store the current access time in Datastore.
-    store_time(datetime.datetime.now())
+def index():
+    
+    return render_template('index.html')
 
-    # Fetch the most recent 10 access times from Datastore.
-    times = fetch_times(10)
+@app.route('/create')
+def create():
+    
+    return render_template('create.html')
 
-    return render_template(
-        'index.html', times=times)
+@app.route('/read')
+def read():
+    # When deployed to App Engine, the `GAE_ENV` environment variable will be
+    # set to `standard`
+    if os.environ.get('GAE_ENV') == 'standard':
+        # If deployed, use the local socket interface for accessing Cloud SQL
+        unix_socket = '/cloudsql/{}'.format(db_connection_name)
+        cnx = pymysql.connect(user=db_user, password=db_password,
+                              unix_socket=unix_socket, db=db_name)
+    else:
+        # If running locally, use the TCP connections instead
+        # Set up Cloud SQL Proxy (cloud.google.com/sql/docs/mysql/sql-proxy)
+        # so that your application can use 127.0.0.1:3306 to connect to your
+        # Cloud SQL instance
+        host = '127.0.0.1'
+        cnx = pymysql.connect(user=db_user, password=db_password,
+                              host=host, db=db_name)
+
+    with cnx.cursor() as cursor:
+        cursor.execute('SELECT * FROM entries;')
+        result = cursor.fetchall()
+        current_msg = result[0][0]
+    cnx.close()
+
+    
+    return render_template('read.html', msg=str(current_msg))
+
+@app.route('/update')
+def update():
+    
+    return render_template('update.html')
+
+@app.route('/delete')
+def delete():
+    
+    return render_template('delete.html')
 
 
 if __name__ == '__main__':
-    # This is used when running locally only. When deploying to Google App
-    # Engine, a webserver process such as Gunicorn will serve the app. This
-    # can be configured by adding an `entrypoint` to app.yaml.
-    # Flask's development server will automatically serve static files in
-    # the "static" directory. See:
-    # http://flask.pocoo.org/docs/1.0/quickstart/#static-files. Once deployed,
-    # App Engine itself will serve those files as configured in app.yaml.
+
     app.run(host='127.0.0.1', port=8080, debug=True)

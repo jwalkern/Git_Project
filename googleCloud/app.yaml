@@ -11,3 +11,9 @@ handlers:
   # the entire handlers section) when there are no static files defined.
 - url: /.*
   script: auto
+  
+env_variables:
+  CLOUD_SQL_USERNAME: master
+  CLOUD_SQL_PASSWORD: test1234
+  CLOUD_SQL_DATABASE_NAME: devices
+  CLOUD_SQL_CONNECTION_NAME: iotrace-1337:europe-west3:iotrace-sql
