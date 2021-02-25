@@ -14,49 +14,31 @@ app = Flask(__name__)
 
 #Dette er vores startside og viser index.html 
 @app.route('/')
-def index():
-    
+def index():    
     return render_template('index.html')
 
-@app.route('/create', methods=['POST'])
-def create():
-    
-    if request.method == 'POST':
-        if not request.is_json:
-            return jsonify({"msg": "Missing JSON in request"}), 400
-    
-        add_device(request.get_json())
-        return "Device added."
-    json_file = get_device()
-    
-    return render_template('create.html', json_file=json_file)
+@app.route('/create')
+def create():       
+    return render_template('create.html')
 
-@app.route('/read', methods=['GET'])
-def read():
-    if request.method == 'GET':
-        return get_device()
-    
+@app.route('/read')
+def read():    
     return render_template('read.html')
 
 @app.route('/update')
-def update():
-    
+def update():    
     return render_template('update.html')
 
 @app.route('/delete')
-def delete():
-    
+def delete():    
     return render_template('delete.html')
 
+@app.route('/api/read', methods=['GET'])
+def api_read():
+    return get_device()
 
-
-
-
-
-
-
-@app.route('/test', methods=['POST','GET'])
-def test():
+@app.route('/api/create', methods=['POST'])
+def api_create():
     if request.method == 'POST':
         if not request.is_json:
             return jsonify({"msg": "Missing JSON in request"}), 400  

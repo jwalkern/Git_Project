@@ -3,6 +3,19 @@
 {% block body %}
 
 <h1>Create</h1>
-{{ jsonfile }}
+<h1>Read</h1>
+<p>Download and install Postman, with link</p>
+<a href="https://www.postman.com">Download Postman</a>
+<p>Make a POST request to https://iotrace-1337.ey.r.appspot.com/api/create </p>
+<p>{</p>
+<p>"deviceName":"<enter a name>",</p>
+<p>"pos":0,</p>
+<p>"lte_rssi":0 ,</p>
+<p>"volt":0,</p>
+<p>"temp":0, </p>
+<p>"hpa":0, </p>
+<p>"humid":0,</p>
+<p>}</p>
+
 
 {% endblock %}

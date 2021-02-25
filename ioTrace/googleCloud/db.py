@@ -34,9 +34,10 @@ def get_device():
     conn.close()
     return device_list
 
-def add_device(deviceName):
+def add_device(item):
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('INSERT INTO entries (deviceName) VALUES (%s)',(deviceName["Name"]))
+        cursor.execute('INSERT INTO entries (deviceName, pos, lte_rssi, volt, temp, hpa, humid) VALUES (%s, %s, %s, %s, %s, %s, %s, )',
+                       (item['deviceName'], item['pos'], item['lte_rssi'], item['volt'], item['temp'], item['hpa'], item['humid']))
     conn.commit()
     conn.close()
