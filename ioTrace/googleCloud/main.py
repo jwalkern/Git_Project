@@ -18,7 +18,7 @@ def index():
     
     return render_template('index.html')
 
-@app.route('/create', methods = ['POST'])
+@app.route('/create', methods=['POST'])
 def create():
     
     if request.method == 'POST':
@@ -34,9 +34,9 @@ def create():
 @app.route('/read', methods=['GET'])
 def read():
     
-    json_file = get_device()
+    get_device()
     
-    return render_template('read.html', json_file=json_file)
+    return render_template('read.html')
 
 @app.route('/update')
 def update():
@@ -47,6 +47,24 @@ def update():
 def delete():
     
     return render_template('delete.html')
+
+
+
+
+
+
+
+
+@app.route('/test', methods=['POST','GET'])
+def test():
+    if request.method == 'POST':
+        if not request.is_json:
+            return jsonify({"msg": "Missing JSON in request"}), 400  
+
+        add_device(request.get_json())
+        return 'Device Added'
+
+    return get_device()   
 
 
 if __name__ == '__main__':
