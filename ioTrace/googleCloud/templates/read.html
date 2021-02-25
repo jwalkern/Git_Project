@@ -3,11 +3,5 @@
 {% block body %}
 
 <h1>Read</h1>
-<script>
-      const jsonfile = JSON.parse({{jsonfile|tojson}});
-      console.log(jsonfile);
-      document.querySelector(".container").innerHTML = JSON.stringify(jsonfile, null, 2);
-</script>
-
-
+{{ jsonfile }}
 {% endblock %}

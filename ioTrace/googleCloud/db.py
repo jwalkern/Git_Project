@@ -1,7 +1,6 @@
 import os
 import pymysql
-import json
-
+from flask import jsonify
 
 db_user = os.environ.get('CLOUD_SQL_USERNAME')
 db_password = os.environ.get('CLOUD_SQL_PASSWORD')
@@ -29,7 +28,7 @@ def get_device():
         result = cursor.execute('SELECT * FROM entries;')
         devices = cursor.fetchall()
         if result > 0:
-            device_list = json.dumps(devices)
+            device_list = jsonify(devices)
         else:
             device_list = 'No device in DB'
     conn.close()

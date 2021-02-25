@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 from db import get_device, add_device
 
 
@@ -18,10 +18,18 @@ def index():
     
     return render_template('index.html')
 
-@app.route('/create')
+@app.route('/create', methods = ['POST'])
 def create():
     
-    return render_template('create.html')
+    if request.method == 'POST':
+        if not request.is_json:
+            return jsonify({"msg": "Missing JSON in request"}), 400
+    
+        add_device(request.get_json())
+        return "Device added."
+    json_file = get_device()
+    
+    return render_template('create.html', json_file=json_file)
 
 @app.route('/read', methods=['GET'])
 def read():
