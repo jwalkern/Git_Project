@@ -25,15 +25,27 @@
       }
     </style>
   </head>  
-<body>  
-   <!-- As a heading -->
-<nav class="navbar navbar-light bg-light">
-  <div class="container-fluid">
-    <span class="navbar-brand mb-0 h1">Navbar</span>
-  </div>
-</nav>
-
-{% block body%}{& endblock%}
-</body>
-
+  <body class="d-flex h-100 text-center text-white bg-dark">    
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+      <header class="mb-auto">
+        <div>
+          <h3 class="float-md-start mb-0">Safe Network</h3>
+          <nav class="nav nav-masthead justify-content-center float-md-end">
+            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/scan">Scan</a>
+            <a class="nav-link" href="/result">View Result</a>
+    		<a class="nav-link" href="/upload">Download</a>
+          </nav>
+        </div>
+      </header>
+      
+      {% block body %}
+      
+      {% endblock %}
+    
+      <footer class="mt-auto text-white-50">
+        <p>A networkscanner by @BiMiJaCh .</p>
+      </footer>
+    </div>  
+  </body>
 </html>
