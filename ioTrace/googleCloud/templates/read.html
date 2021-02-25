@@ -3,6 +3,9 @@
 {% block body %}
 
 <h1>Read</h1>
-<p> {{ msg }} </p>
-
+<ol>
+{% for i in range(0, len)%}
+<li>{{ current_msg[i] }}</li>
+{%endfor%}
+</ol>
 {% endblock %}

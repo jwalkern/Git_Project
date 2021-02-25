@@ -24,6 +24,7 @@ def create():
 
 @app.route('/read')
 def read():
+    current_msg = []
     # When deployed to App Engine, the `GAE_ENV` environment variable will be
     # set to `standard`
     if os.environ.get('GAE_ENV') == 'standard':
@@ -43,11 +44,11 @@ def read():
     with cnx.cursor() as cursor:
         cursor.execute('SELECT * FROM entries;')
         result = cursor.fetchall()
-        current_msg = result[0][0]
+        current_msg.append(result[0][0])
     cnx.close()
 
     
-    return render_template('read.html', msg=str(current_msg))
+    return render_template('read.html', len = len(current_msg), current_msg=current_msg)
 
 @app.route('/update')
 def update():
