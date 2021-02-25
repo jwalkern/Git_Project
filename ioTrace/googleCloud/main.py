@@ -1,6 +1,7 @@
 import os
 from flask import Flask, render_template
-import pymysql
+from db import get_device, add_device
+
 
 
 db_user = os.environ.get('CLOUD_SQL_USERNAME')
@@ -22,33 +23,12 @@ def create():
     
     return render_template('create.html')
 
-@app.route('/read')
+@app.route('/read', methods=['GET'])
 def read():
-    current_msg = []
-    # When deployed to App Engine, the `GAE_ENV` environment variable will be
-    # set to `standard`
-    if os.environ.get('GAE_ENV') == 'standard':
-        # If deployed, use the local socket interface for accessing Cloud SQL
-        unix_socket = '/cloudsql/{}'.format(db_connection_name)
-        cnx = pymysql.connect(user=db_user, password=db_password,
-                              unix_socket=unix_socket, db=db_name)
-    else:
-        # If running locally, use the TCP connections instead
-        # Set up Cloud SQL Proxy (cloud.google.com/sql/docs/mysql/sql-proxy)
-        # so that your application can use 127.0.0.1:3306 to connect to your
-        # Cloud SQL instance
-        host = '127.0.0.1'
-        cnx = pymysql.connect(user=db_user, password=db_password,
-                              host=host, db=db_name)
-
-    with cnx.cursor() as cursor:
-        cursor.execute('SELECT * FROM entries;')
-        result = cursor.fetchall()
-        current_msg.append(result[0][0])
-    cnx.close()
-
     
-    return render_template('read.html', len = len(current_msg), current_msg=current_msg)
+    json_file = get_device()
+    
+    return render_template('read.html', json_file=json_file)
 
 @app.route('/update')
 def update():

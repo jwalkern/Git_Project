@@ -3,9 +3,11 @@
 {% block body %}
 
 <h1>Read</h1>
-<ol>
-{% for i in range(0, len)%}
-<li>{{ current_msg[i] }}</li>
-{%endfor%}
-</ol>
+<script>
+      const jsonfile = JSON.parse({{jsonfile|tojson}});
+      console.log(jsonfile);
+      document.querySelector(".container").innerHTML = JSON.stringify(jsonfile, null, 2);
+</script>
+
+
 {% endblock %}
