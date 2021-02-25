@@ -17,19 +17,19 @@
     </head>
        
     <body>    
-        <nav class="navbar navbar-light bg-light">
-            <div class="container">
+        <nav class="navbar navbar-white bg-white">
+            <div class="container-fluid">
                 <a class="navbar-brand" href="#">
                     <img src="../static/images/ioTrace.png" alt="" width="315" height="124"
                 </a>
             </div>
         </nav>
-        
-        {% block body %}
-        {% endblock %}
-           
-        <footer class="mt-auto text-white-50">
-            <p>A networkscanner by @BiMiJaCh .</p>
-        </footer> 
+        <div class="container-fluid">
+            {% block body %}
+            {% endblock %}               
+            <footer class="mt-auto text-white-50">
+                <p>A networkscanner by @BiMiJaCh .</p>
+            </footer>
+        </div>
     </body>
 </html>
