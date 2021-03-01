@@ -8,3 +8,12 @@ INSERT INTO entries (deviceName, pos, lte_rssi, volt, temp, hpa, humid) values (
 INSERT INTO entries (deviceName, pos, lte_rssi, volt, temp, hpa, humid) values ("device7", "130709.000,5701.2835N,0953.2587E,1.2,21.5,3,0.00,0.9,0.5,150221,06",-54,21547,7777,10209260,77777);
 INSERT INTO entries (deviceName, pos, lte_rssi, volt, temp, hpa, humid) values ("device8", "130709.000,5701.2835N,0953.2587E,1.2,21.5,3,0.00,0.9,0.5,150221,06",-54,76532,8888,10209260,88888);
 INSERT INTO entries (deviceName, pos, lte_rssi, volt, temp, hpa, humid) values ("device9", "130709.000,5701.2835N,0953.2587E,1.2,21.5,3,0.00,0.9,0.5,150221,06",-54,25698,9999,10209260,99999);
+{
+"deviceName":"enter a name",
+"pos":"0",
+"lte_rssi":0,
+"volt":0,
+"temp":0, 
+"hpa":0, 
+"humid":0
+}
