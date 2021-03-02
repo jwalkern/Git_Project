@@ -1,7 +1,7 @@
 import os
-from flask import Flask, render_template, request, jsonify, redirect
+from flask import Flask, render_template, request, jsonify
 from db import get_device, add_device
-from form import MyForm
+from forms import CreateDeviceForm
 
 
 
@@ -11,7 +11,7 @@ db_name = os.environ.get('CLOUD_SQL_DATABASE_NAME')
 db_connection_name = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
 
 app = Flask(__name__)
-
+app.config['SECRET_KEY'] = 'd70f607b41a89d8c815357cb3dcfc614'
 
 #Dette er vores startside og viser index.html 
 @app.route('/')
@@ -19,20 +19,21 @@ def index():
     return render_template('index.html')
 
 @app.route('/create')
-def create():       
-    return render_template('create.html')
+def create():
+    form = CreateDeviceForm()       
+    return render_template('create.html', title='Add Deivce', form=form)
 
 @app.route('/read')
 def read():    
-    return render_template('read.html')
+    return render_template('read.html', title='read')
 
 @app.route('/update')
 def update():    
-    return render_template('update.html')
+    return render_template('update.html', title='update')
 
 @app.route('/delete')
 def delete():    
-    return render_template('delete.html')
+    return render_template('delete.html', title='delete')
 
 
 #Below this comment is all the API commands
@@ -41,13 +42,6 @@ def delete():
 @app.route('/api/read', methods=['GET'])
 def api_read():
     return get_device()
-
-@app.route('/api/test', methods=['POST', 'GET'])
-def api_device():
-    form = MyForm()
-    if form.validate_on_submit():
-        return redirect('/delete')
-    return render_template('test.html', form=form)
 
 
 @app.route('/api/create', methods=['POST'])

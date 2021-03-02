@@ -1,12 +1,13 @@
-{% extends "base.html" %}
-{% block title %}Create{% endblock %}
-{% block body %}
+{% extends "layout.html" %}
+
+{% block content %}
 
 <h1>Create</h1>
 <h1>Read</h1>
-<p>Download and install Postman, with link</p>
-<a href="https://www.postman.com">Download Postman</a>
-<p>Make a POST request to https://iotrace-1337.ey.r.appspot.com/api/create </p>
-<p>{<br>"deviceName":"enter a name",<br>"pos":"0",<br>"lte_rssi":0,<br>"volt":0,<br>"temp":0,<br>"hpa":0,<br>"humid":0<br>}</p>
 
-{% endblock %}
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+    
+    </form>
+
+{% endblock content %}
