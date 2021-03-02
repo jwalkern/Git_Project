@@ -22,21 +22,45 @@ def open_connection():
     return conn
 
 
+def get_user(userID):
+    conn = open_connection()
+    with conn.cursor() as cursor:
+        result = cursor.execute('SELECT * FROM user WHERE userID = ' + str(userID) + ';')
+        user = cursor.fetchall()
+        if result > 0:
+            user_list = jsonify(user)
+        else:
+            user_list = 'No user with', str(userID), 'in DB.'
+        return user_list
+
 def get_device():
     conn = open_connection()
     with conn.cursor() as cursor:
-        result = cursor.execute('SELECT * FROM entries;')
-        devices = cursor.fetchall()
+        result = cursor.execute('SELECT * FROM device;')
+        device = cursor.fetchall()
         if result > 0:
-            device_list = jsonify(devices)
+            device_list = jsonify(device)
         else:
             device_list = 'No device in DB'
     conn.close()
     return device_list
 
+def get_device_by_userID(userID):
+    conn = open_connection()
+    with conn.cursor() as cursor:
+        result = cursor.execute('SELECT * FROM device WHERE userID ='+str(userID)+';')
+        device = cursor.fetchall()
+        if result > 0:
+            device_list = jsonify(device)
+        else:
+            device_list = 'No device in DB'
+    conn.close()
+    return device_list
+    
+
 def add_device(item):
     conn = open_connection()
     with conn.cursor() as cursor:
-        cursor.execute('INSERT INTO entries (deviceName, pos, lte_rssi, volt, temp, hpa, humid) VALUES (%s, %s, %d, %d, %d, %d, %d)', (item['deviceName'], item['pos'], item['lte_rssi'], item['volt'], item['temp'], item['hpa'], item['humid']))
+        cursor.execute('INSERT INTO device ( hpa, humid) VALUES (%s, %s, %d, %d, %d, %d, %d)', (item['deviceName'], item['pos'], item['lte_rssi'], item['volt'], item['temp'], item['hpa'], item['humid']))
     conn.commit()
     conn.close()
