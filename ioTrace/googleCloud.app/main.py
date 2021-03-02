@@ -1,6 +1,7 @@
 import os
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect
 from db import get_device, add_device
+from form import MyForm
 
 
 
@@ -33,9 +34,21 @@ def update():
 def delete():    
     return render_template('delete.html')
 
+
+#Below this comment is all the API commands
+
+
 @app.route('/api/read', methods=['GET'])
 def api_read():
     return get_device()
+
+@app.route('/api/test', methods=['POST', 'GET'])
+def api_device():
+    form = MyForm()
+    if form.validate_on_submit():
+        return redirect('/delete')
+    return render_template('test.html', form=form)
+
 
 @app.route('/api/create', methods=['POST'])
 def api_create():
@@ -46,7 +59,8 @@ def api_create():
         add_device(request.get_json())
         return 'Device Added'
 
-    return get_device()   
+    return get_device()
+
 
 
 if __name__ == '__main__':
