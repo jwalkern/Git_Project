@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% set active_page = "dummy_data" %}
+{% block content %}
+
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Generate Dummy Data!</legend>
+        <div class="form-group">
+            {{ form.device_uid.label(class="form-control-label") }}
+            {% if form.device_uid.errors %}
+                {{ form.device_uid(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.device_uid.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.device_uid(class="form-control form-control-lg") }}
+            {% endif %}
+        </div>
+    </fieldset>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-outline-success") }}
+    </div>
+</form>
+
+{% endblock content %}
