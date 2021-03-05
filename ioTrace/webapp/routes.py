@@ -2,7 +2,7 @@ import os
 import secrets
 import random
 from PIL import Image
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, abort
 from webapp import app, db, bcrypt
 from webapp.forms import LoginForm, RegistrationForm, UpdateAccountForm, CreateDeviceForm, GenerateDummyData
 from webapp.models import User, Device, Dummydata
@@ -21,17 +21,52 @@ def dashboard():
     data = Dummydata.query.all()     
     return render_template('dashboard.html', title='Dashboard', devices=devices, data=data)
 
-@app.route('/device/new', methods=['GET', 'POST'])
+@app.route('/dashboard/device/<int:device_id>')
+@login_required
+def device(device_id):
+    device = Device.query.get_or_404(device_id)
+    return render_template('device.html', title=device.devicename, device=device)
+
+@app.route('/dashboard/device/<int:device_id>/update', methods=['GET', 'POST'])
+@login_required
+def update_device(device_id):
+    device = Device.query.get_or_404(device_id)
+    if device.owner != current_user:
+        abort(403)
+    form = CreateDeviceForm()
+    if form.validate_on_submit():
+        device.devicename = form.devicename.data
+        device.devicetype = form.devicetype.data
+        db.session.commit()
+        flash('Your device has been updated', 'success')
+        return redirect(url_for('device', device_id=device.id))
+    elif request.method == 'GET':
+        form.devicename.data = device.devicename
+        form.devicetype.data = device.devicetype
+    return render_template('edit_device.html', title='Update Device', form=form, legend='Update device')
+ 
+@app.route('/dashboard/device/<int:device_id>/delete', methods=['POST'])
+@login_required
+def delete_device(device_id):
+    device = Device.query.get_or_404(device_id)
+    if device.owner != current_user:
+        abort(403)
+    db.session.delete(device)
+    db.session.commit()
+    flash('Your device has been deleted!', 'success')
+    return redirect(url_for('dashboard'))
+
+@app.route('/dashboard/device/new', methods=['GET', 'POST'])
 @login_required
 def add_device():
     form = CreateDeviceForm()
     if form.validate_on_submit():
-        device = Device(device_name=form.devicename.data, owner=current_user)
+        device = Device(devicename=form.devicename.data, devicetype=form.devicetype.data, owner=current_user)
         db.session.add(device)
         db.session.commit()
         flash('The device have been added!', 'success')
         return redirect(url_for('home'))
-    return render_template('add_device.html', title='Add Device', form=form)
+    return render_template('edit_device.html', title='Add Device', form=form, legend='Add device')
 
 def random_generate():
     pos = str(round(random.uniform(-180,180),6))+','+ str(round(random.uniform(-90,90),6))
@@ -53,7 +88,7 @@ def dummy():
             db.session.add(generateddummydata)
             db.session.commit()
             flash('Dummy Data Generated!', 'success')
-            return redirect(url_for('dashboard'))
+            
     return render_template('dummy_data.html', title='GDD', form=form)    
 
 @app.route('/login', methods=['GET', 'POST'])

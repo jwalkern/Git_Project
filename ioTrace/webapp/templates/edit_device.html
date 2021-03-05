@@ -5,7 +5,7 @@
 <form method="POST" action="">
     {{ form.hidden_tag() }}
     <fieldset class="form-group">
-        <legend class="border-bottom mb-4">Add New Device</legend>
+        <legend class="border-bottom mb-4">{{ legend }}</legend>
         <div class="form-group">
             {{ form.devicename.label(class="form-control-label") }}
             {% if form.devicename.errors %}
@@ -17,6 +17,19 @@
                 </div>
             {% else %}
                 {{ form.devicename(class="form-control form-control-lg") }}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.devicetype.label(class="form-control-label") }}
+            {% if form.devicetype.errors %}
+                {{ form.devicetype(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in form.devicename.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.devicetype(class="form-control form-control-lg") }}
             {% endif %}
         </div>
     </fieldset>

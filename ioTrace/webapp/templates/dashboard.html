@@ -15,7 +15,10 @@
             {{device.id}}
         </div>
         <div class="col">
-            {{device.device_name}}
+            <p><a href="{{ url_for('device', device_id=device.id) }}">{{device.devicename}}</a></p>
+        </div>
+        <div class="col">
+            {{device.devicetype}}
         </div>     
     </div>
     {% endfor %}

@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<legend class="border-bottom mb-4">Device Information</legend>
+
+<div class="container">
+
+    <div class="row">    
+        <div class="col">
+            {{device.owner.username}}
+        </div>
+        <div class="col">
+            {{device.id}}
+        </div>
+        <div class="col">
+            {{device.devicename}}
+        </div>
+        <div class="col">
+            {{device.devicetype}}
+        </div>       
+    </div>
+    {% if device.owner == current_user %}
+    <div class="row">
+        <div class="col">
+            <a class="btn btn-secondary btn-sm m-1" href="{{ url_for('update_device', device_id=device.id) }}">Edit Device</a>
+            <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete Device?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are your sure that you would like to delete the device?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <form action="{{url_for('delete_device', device_id=device.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="delete">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

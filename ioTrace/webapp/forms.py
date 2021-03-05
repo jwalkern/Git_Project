@@ -1,13 +1,14 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, IntegerField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, IntegerField, PasswordField, SubmitField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length, EqualTo, InputRequired, Email, ValidationError
 from webapp.models import User, Device
 
 
 class CreateDeviceForm(FlaskForm):
     devicename = StringField('Device Name', validators=[DataRequired(), Length(min=0, max=20)])
+    devicetype = SelectField('Device Type', choices=[('s1','Sensor1'),('s2','Sensor2'),('s3','Sensor3'),('track','Tracker'),('track+','Tracker +')], validators=[DataRequired()])
     submit = SubmitField('Create Device')
     
 class GenerateDummyData(FlaskForm):
