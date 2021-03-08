@@ -23,35 +23,5 @@
     </div>
     {% endfor %}
 </div>
-<div class="container">
-    {% for item in data %}   
-    <div class="row">
-        <div class="col">
-            {{item.devicedata.id}}
-        </div>
-        <div class="col">
-            {{item.timestamp}}
-        </div>
-        <div class="col">
-            {{item.pos}}
-        </div>
-        <div class="col">
-            {{item.temp}}
-        </div>
-        <div class="col">
-            {{item.humid}}
-        </div>
-        <div class="col">
-            {{item.hpa}}
-        </div>
-        <div class="col">
-            {{item.volt}}
-        </div>
-        <div class="col">
-            {{item.lte_rssi}}
-        </div>
-    </div>
-    {% endfor %}
-</div>
 
 {% endblock content %}

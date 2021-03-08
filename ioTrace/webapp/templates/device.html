@@ -2,10 +2,9 @@
 
 {% block content %}
 
-<legend class="border-bottom mb-4">Device Information</legend>
+<legend class="border-bottom mb-4">Edit device</legend>
 
 <div class="container">
-
     <div class="row">    
         <div class="col">
             {{device.owner.username}}
@@ -18,17 +17,44 @@
         </div>
         <div class="col">
             {{device.devicetype}}
-        </div>       
-    </div>
-    {% if device.owner == current_user %}
-    <div class="row">
+        </div>
         <div class="col">
             <a class="btn btn-secondary btn-sm m-1" href="{{ url_for('update_device', device_id=device.id) }}">Edit Device</a>
             <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+        </div>       
+    </div>
+    {% for item in data %}  
+    <div class="row">
+        <div class="col">
+            {{item.devicedata.id}}
+        </div>
+        <div class="col">
+            {{item.timestamp}}
+        </div>
+        <div class="col">
+            {{item.pos}}
+        </div>
+        <div class="col">
+            {{item.temp}}
+        </div>
+        <div class="col">
+            {{item.humid}}
+        </div>
+        <div class="col">
+            {{item.hpa}}
+        </div>
+        <div class="col">
+            {{item.volt}}
+        </div>
+        <div class="col">
+            {{item.lte_rssi}}
         </div>
     </div>
-    {% endif %}
+    {% endfor %}  
 </div>
+
+
+
 
 <!-- Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+{% set active_page = "dashboard_device" %}
+
+{% block content %}
+
+<legend class="border-bottom mb-4">Device Data</legend>
+
+<div class="container">
+    {% for device in devices.items %}
+    <div class="row">    
+        <div class="col">
+            {{device.owner.username}}
+        </div>
+        <div class="col">
+            {{device.id}}
+        </div>
+        <div class="col">
+            <p><a href="{{ url_for('device', device_id=device.id) }}">{{device.devicename}}</a></p>
+        </div>
+        <div class="col">
+            {{device.devicetype}}
+        </div>
+        <div class="col">
+            <a class="btn btn-secondary btn-sm m-1" href="{{ url_for('update_device', device_id=device.id) }}">Edit Device</a>
+            <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+        </div>       
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete Device?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are your sure that you would like to delete the device?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <form action="{{url_for('delete_device', device_id=device.id) }}" method="POST">
+                <input class="btn btn-danger" type="submit" value="delete">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% for item in device.datadumps %} 
+    <div class="row">
+        <div class="col">
+            {{item.timestamp}}
+        </div>
+        <div class="col">
+            {{item.pos}}
+        </div>
+        <div class="col">
+            {{item.temp}}
+        </div>
+        <div class="col">
+            {{item.humid}}
+        </div>
+        <div class="col">
+            {{item.hpa}}
+        </div>
+        <div class="col">
+            {{item.volt}}
+        </div>
+        <div class="col">
+            {{item.lte_rssi}}
+        </div>
+    </div>
+    {% endfor %}
+    {% endfor %}  
+</div>
+
+
+<div class="container">
+    {% for page_num in devices.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=3) %}
+        {% if page_num %}
+            {% if devices.page == page_num %}
+                <a class="btn btn-success mb-4" href="{{ url_for('device_data', page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-success mb-4" href="{{ url_for('device_data', page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+        ...
+        {% endif %}
+    {% endfor %}
+</div>
+
+
+
+{% endblock content %}

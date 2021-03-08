@@ -17,15 +17,25 @@ def home():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    devices = Device.query.all()
-    data = Dummydata.query.all()     
+    devices = Device.query.filter_by(user_id=current_user.id)    
+    data = Dummydata.query.filter_by()
     return render_template('dashboard.html', title='Dashboard', devices=devices, data=data)
+
+@app.route('/dashbord/data/device')
+@login_required
+def device_data():
+    page = request.args.get('page', 1, type=int)
+    devices = Device.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=1)
+    return render_template('device_data.html', title='Device Data', devices=devices)
 
 @app.route('/dashboard/device/<int:device_id>')
 @login_required
 def device(device_id):
     device = Device.query.get_or_404(device_id)
-    return render_template('device.html', title=device.devicename, device=device)
+    if device.owner != current_user:
+        abort(403)
+    data = Dummydata.query.filter_by(device_id=device_id).order_by(Dummydata.timestamp.desc())
+    return render_template('device.html', title=device.devicename, device=device, data=data)
 
 @app.route('/dashboard/device/<int:device_id>/update', methods=['GET', 'POST'])
 @login_required
@@ -68,29 +78,6 @@ def add_device():
         return redirect(url_for('home'))
     return render_template('edit_device.html', title='Add Device', form=form, legend='Add device')
 
-def random_generate():
-    pos = str(round(random.uniform(-180,180),6))+','+ str(round(random.uniform(-90,90),6))
-    temp = round(random.uniform(1500,3000))
-    humid = round(random.uniform(35000,65000))
-    hpa = round(random.uniform(10000000,20000000))
-    volt = round(random.uniform(15000,65000))
-    lte_rssi = round(random.uniform(-100,0))
-    return pos, temp, humid, hpa, volt, lte_rssi
-
-@app.route('/generate/data', methods=['GET', 'POST'])
-def dummy():
-    form = GenerateDummyData()
-    if form.validate_on_submit():
-        device_id = Device.query.filter_by(id=form.device_uid.data).first()
-        if device_id:
-            pos, temp, humid, hpa, volt, lte_rssi = random_generate()
-            generateddummydata = Dummydata(pos=pos, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, device_id=form.device_uid.data )
-            db.session.add(generateddummydata)
-            db.session.commit()
-            flash('Dummy Data Generated!', 'success')
-            
-    return render_template('dummy_data.html', title='GDD', form=form)    
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -125,7 +112,6 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-
 def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
@@ -156,5 +142,39 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email        
     image_file = url_for('static', filename='images/profile_pics/' + current_user.image_file)
-    return render_template('account.html', title='Account', image_file=image_file, form=form)
+    devices = Device.query.filter_by(user_id=current_user.id)
+    return render_template('account.html', title='Account', image_file=image_file, devices=devices, form=form)
+
+
+
+
+
+
+
+
+
+
+
+def random_generate():
+    pos = str(round(random.uniform(-180,180),6))+','+ str(round(random.uniform(-90,90),6))
+    temp = round(random.uniform(1500,3000))
+    humid = round(random.uniform(35000,65000))
+    hpa = round(random.uniform(10000000,20000000))
+    volt = round(random.uniform(15000,65000))
+    lte_rssi = round(random.uniform(-100,0))
+    return pos, temp, humid, hpa, volt, lte_rssi
+
+@app.route('/generate/data', methods=['GET', 'POST'])
+def dummy():
+    form = GenerateDummyData()
+    if form.validate_on_submit():
+        device_id = Device.query.filter_by(id=form.device_uid.data).first()
+        if device_id:
+            pos, temp, humid, hpa, volt, lte_rssi = random_generate()
+            generateddummydata = Dummydata(pos=pos, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, device_id=form.device_uid.data )
+            db.session.add(generateddummydata)
+            db.session.commit()
+            flash('Dummy Data Generated!', 'success')
+            
+    return render_template('dummy_data.html', title='GDD', form=form)  
     
