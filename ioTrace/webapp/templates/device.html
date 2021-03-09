@@ -19,7 +19,7 @@
             {{device.devicetype}}
         </div>
         <div class="col">
-            <a class="btn btn-secondary btn-sm m-1" href="{{ url_for('update_device', device_id=device.id) }}">Edit Device</a>
+            <a class="btn btn-secondary btn-sm m-1" href="{{ url_for('devices.update_device', device_id=device.id) }}">Edit Device</a>
             <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
         </div>       
     </div>
@@ -69,7 +69,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <form action="{{url_for('delete_device', device_id=device.id) }}" method="POST">
+        <form action="{{url_for('devices.delete_device', device_id=device.id) }}" method="POST">
             <input class="btn btn-danger" type="submit" value="delete">
         </form>
       </div>
