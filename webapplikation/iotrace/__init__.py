@@ -26,11 +26,13 @@ def create_app(config_class=Config):
     from iotrace.devices.routes import devices
     from iotrace.main.routes import main
     from iotrace.errors.handlers import errors
+    from iotrace.plots.plot import plots
     
     app.register_blueprint(accounts)
     app.register_blueprint(devices)
     app.register_blueprint(main)
     app.register_blueprint(errors)
+    app.register_blueprint(plots)
     
     return app
     
