@@ -3,11 +3,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_googlemaps import GoogleMaps
 from iotrace.config import Config
 
 mail = Mail()
 db = SQLAlchemy()
 bcrypt = Bcrypt()
+maps = GoogleMaps()
 login_manager = LoginManager()
 
 login_manager.login_view = 'accounts.login'
@@ -20,6 +22,7 @@ def create_app(config_class=Config):
     mail.init_app(app)
     db.init_app(app)
     bcrypt.init_app(app)
+    maps.init_app(app)
     login_manager.init_app(app)
     
     from iotrace.accounts.routes import accounts

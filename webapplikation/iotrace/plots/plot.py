@@ -5,6 +5,7 @@ from flask_login import login_required, current_user
 from matplotlib.figure import Figure
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from iotrace import maps
 from iotrace.models import Device, Dummydata 
 
 plots = Blueprint('plots', __name__)
