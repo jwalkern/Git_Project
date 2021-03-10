@@ -39,7 +39,7 @@ class Device(db.Model):
     devicename = db.Column(db.String(100), nullable=False)
     devicetype = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    datadumps = db.relationship('Dummydata', backref='devicedata', lazy=True)
+    datadumps = db.relationship('Dummydata', cascade='all, delete-orphan', backref='devicedata', lazy=True)
     
     
     def __repr__(self):

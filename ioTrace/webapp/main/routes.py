@@ -28,8 +28,8 @@ def dummy():
     if form.validate_on_submit():
         for item in range(len(device)):
             pos, temp, humid, hpa, volt, lte_rssi = random_generate()
-            generateddummydata = Dummydata(pos=pos, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, device_id=(item+1))
-            db.session.add(generateddummydata)
+            data = Dummydata(pos=pos, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, device_id=(item+1))
+            db.session.add(data)
         db.session.commit()
         flash('Data generated!', 'success')  
     return render_template('dummy_data.html', title='GDD', form=form) 
