@@ -3,7 +3,15 @@
 {% block content %}
 
 <legend class="border-bottom mb-4">Edit device</legend>
-
+<div class="container">
+    <div class="row justify-content-md-center">
+        {%for i in current_user.devices %}
+        <div class="col-sm-auto">
+            <a href="{{ url_for('devices.device', device_id=i.id) }}" class="btn btn-outline-success btn-sm">{{i.id}}</a>
+        </div>       
+        {%endfor%}
+    </div>
+</div>
 <div class="container">
     <div class="row">    
         <div class="col">

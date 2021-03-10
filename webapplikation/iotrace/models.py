@@ -43,7 +43,7 @@ class Device(db.Model):
     
     
     def __repr__(self):
-        return f"Device('{self.device_name}')"
+        return f"Device('{self.devicename}')"
     
 class Dummydata(db.Model):
     id = db.Column(db.Integer, primary_key=True)

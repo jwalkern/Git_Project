@@ -11,7 +11,8 @@ devices = Blueprint('devices', __name__)
 def dashboard():
     devices = Device.query.filter_by(user_id=current_user.id)    
     data = Dummydata.query.filter_by()
-    return render_template('dashboard.html', title='Dashboard', devices=devices, data=data)
+    test = current_user.devices
+    return render_template('dashboard.html', title='Dashboard', devices=devices, data=data, test=test)
 
 @devices.route('/dashboard/device/data')
 @login_required

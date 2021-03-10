@@ -10,12 +10,10 @@ from iotrace.models import Device, Dummydata
 
 plots = Blueprint('plots', __name__)
 
-def device_temp(device_id):
+def device_temp(datadumps):
 	time = []
 	temp = []
-	# Fetching data
-	data = Dummydata.query.filter_by(device_id=device_id).order_by(Dummydata.timestamp)
-	for item in data:
+	for item in datadumps:
 		time.append(item.timestamp.strftime('%d-%m-%Y'))
 		temp.append(item.temp)
 	# Generate plot
@@ -32,12 +30,11 @@ def device_temp(device_id):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def device_humid(device_id):
+def device_humid(datadumps):
 	time = []
 	humid = []
 	# Fetching data
-	data = Dummydata.query.filter_by(device_id=device_id).order_by(Dummydata.timestamp)
-	for item in data:
+	for item in datadumps:
 		time.append(item.timestamp.strftime('%d-%m-%Y'))
 		humid.append(item.humid)
 	# Generate plot
@@ -54,12 +51,11 @@ def device_humid(device_id):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def device_hpa(device_id):
+def device_hpa(datadumps):
 	time = []
 	hpa = []
 	# Fetching data
-	data = Dummydata.query.filter_by(device_id=device_id).order_by(Dummydata.timestamp)
-	for item in data:
+	for item in datadumps:
 		time.append(item.timestamp.strftime('%d-%m-%Y'))
 		hpa.append(item.hpa)
 	# Generate plot
@@ -76,12 +72,11 @@ def device_hpa(device_id):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def device_volt(device_id):
+def device_volt(datadumps):
 	time = []
 	volt = []
 	# Fetching data
-	data = Dummydata.query.filter_by(device_id=device_id).order_by(Dummydata.timestamp)
-	for item in data:
+	for item in datadumps:
 		time.append(item.timestamp.strftime('%d-%m-%Y'))
 		volt.append(item.volt)
 	# Generate plot
@@ -99,12 +94,11 @@ def device_volt(device_id):
 	return PNG
 
 
-def device_lte_rssi(device_id):
+def device_lte_rssi(datadumps):
 	time = []
 	lte_rssi = []
 	# Fetching data
-	data = Dummydata.query.filter_by(device_id=device_id).order_by(Dummydata.timestamp)
-	for item in data:
+	for item in datadumps:
 		time.append(item.timestamp.strftime('%d-%m-%Y'))
 		lte_rssi.append(item.lte_rssi)
 	# Generate plot
@@ -133,11 +127,11 @@ def plot1(device_id):
 	if device.owner != current_user:
 		abort(403)
 	
-	temp = device_temp(device.id)
-	humid = device_humid(device.id)
-	hpa = device_hpa(device.id)
-	volt = device_volt(device.id)
-	lte_rssi = device_lte_rssi(device.id)
+	temp = device_temp(device.datadumps)
+	humid = device_humid(device.datadumps)
+	hpa = device_hpa(device.datadumps)
+	volt = device_volt(device.datadumps)
+	lte_rssi = device_lte_rssi(device.datadumps)
 
 
 	return render_template('plots/plot1.html', temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi)
