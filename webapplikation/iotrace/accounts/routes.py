@@ -1,9 +1,9 @@
 from flask import Blueprint, redirect, url_for, request, render_template, flash
 from flask_login import current_user, login_user, logout_user, login_required
-from webapp import db, bcrypt
-from webapp.models import User, Device
-from webapp.accounts.forms import LoginForm, RegistrationForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm
-from webapp.accounts.utils import save_picture, send_reset_email
+from iotrace import db, bcrypt
+from iotrace.models import User, Device
+from iotrace.accounts.forms import LoginForm, RegistrationForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm
+from iotrace.accounts.utils import save_picture, send_reset_email
 
 
 

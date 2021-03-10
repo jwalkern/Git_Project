@@ -1,4 +1,4 @@
-from webapp import create_app
+from iotrace import create_app
 
 app = create_app()
 

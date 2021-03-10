@@ -1,8 +1,8 @@
 import random
 from flask import Blueprint, render_template, flash
-from webapp import db
-from webapp.models import Device, Dummydata
-from webapp.main.forms import GenerateDummyData
+from iotrace import db
+from iotrace.models import Device, Dummydata
+from iotrace.main.forms import GenerateDummyData
 
 main = Blueprint('main', __name__)
 

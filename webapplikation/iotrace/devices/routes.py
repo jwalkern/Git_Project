@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, request, abort, flash, url_for
 from flask_login import login_required, current_user
-from webapp import db
-from webapp.models import Device, Dummydata
-from webapp.devices.forms import CreateDeviceForm
+from iotrace import db
+from iotrace.models import Device, Dummydata
+from iotrace.devices.forms import CreateDeviceForm
 
 devices = Blueprint('devices', __name__)
 
