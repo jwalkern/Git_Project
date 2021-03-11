@@ -7,7 +7,7 @@
     <div class="row justify-content-md-center">
         {%for i in current_user.devices %}
         <div class="col-sm-auto">
-            <a href="{{ url_for('devices.device', device_id=i.id) }}" class="btn btn-outline-success btn-sm">{{i.id}}</a>
+            <a href="{{ url_for('devices.device', device_id=i.id) }}" class="btn btn-outline-success">{{loop.index}}</a>
         </div>       
         {%endfor%}
     </div>
@@ -30,38 +30,14 @@
             <a class="btn btn-secondary btn-sm m-1" href="{{ url_for('devices.update_device', device_id=device.id) }}">Edit Device</a>
             <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
         </div>       
-    </div>
-    {% for item in data %}  
-    <div class="row">
-        <div class="col">
-            {{item.devicedata.id}}
-        </div>
-        <div class="col">
-            {{item.timestamp}}
-        </div>
-        <div class="col">
-            {{item.pos}}
-        </div>
-        <div class="col">
-            {{item.temp}}
-        </div>
-        <div class="col">
-            {{item.humid}}
-        </div>
-        <div class="col">
-            {{item.hpa}}
-        </div>
-        <div class="col">
-            {{item.volt}}
-        </div>
-        <div class="col">
-            {{item.lte_rssi}}
-        </div>
-    </div>
-    {% endfor %}  
+    </div>     
 </div>
 
-
+<img = src="{{ temp }}"/>
+<img = src="{{ humid }}"/>
+<img = src="{{ hpa }}"/>
+<img = src="{{ volt }}"/>
+<img = src="{{ lte_rssi }}"/>
 
 
 <!-- Modal -->

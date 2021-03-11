@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from iotrace import db
 from iotrace.models import Device, Dummydata
 from iotrace.devices.forms import CreateDeviceForm
+from iotrace.plots.plot import device_temp, device_humid, device_hpa, device_volt, device_lte_rssi
 
 devices = Blueprint('devices', __name__)
 
@@ -14,23 +15,21 @@ def dashboard():
     test = current_user.devices
     return render_template('dashboard.html', title='Dashboard', devices=devices, data=data, test=test)
 
-@devices.route('/dashboard/device/data')
-@login_required
-def device_data():
-    page = request.args.get('page', 1, type=int)
-    devices = Device.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=1)
-    return render_template('device_data.html', title='Device Data', devices=devices)
 
-@devices.route('/dashboard/device/data/<int:device_id>')
+@devices.route('/dashboard/device/data/<device_id>')
 @login_required
 def device(device_id):
     device = Device.query.get_or_404(device_id)
     if device.owner != current_user:
         abort(403)
-    data = Dummydata.query.filter_by(device_id=device_id).order_by(Dummydata.timestamp.desc())
-    return render_template('device.html', title=device.devicename, device=device, data=data)
+    temp = device_temp(device.datadumps)
+    humid = device_humid(device.datadumps)
+    hpa = device_hpa(device.datadumps)
+    volt = device_volt(device.datadumps)
+    lte_rssi = device_lte_rssi(device.datadumps)   
+    return render_template('device.html', title=device.devicename, device=device, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi)
 
-@devices.route('/dashboard/device/update/<int:device_id>', methods=['GET', 'POST'])
+@devices.route('/dashboard/device/update/<device_id>', methods=['GET', 'POST'])
 @login_required
 def update_device(device_id):
     device = Device.query.get_or_404(device_id)
@@ -48,7 +47,7 @@ def update_device(device_id):
         form.devicetype.data = device.devicetype
     return render_template('edit_device.html', title='Update Device', form=form, legend='Update device')
  
-@devices.route('/dashboard/device/delete/<int:device_id>', methods=['POST'])
+@devices.route('/dashboard/device/delete/<device_id>', methods=['POST'])
 @login_required
 def delete_device(device_id):
     device = Device.query.get_or_404(device_id)

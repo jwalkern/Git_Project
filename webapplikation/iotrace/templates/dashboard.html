@@ -4,28 +4,25 @@
 {% block content %}
 
 <legend class="border-bottom mb-4">Dashboard</legend>
-{{test}}
+
 <div class="container">
     {% for device in devices %}
-    <div class="row">    
+    <a href="{{ url_for('devices.device', device_id=device.id) }}">
+    <div class="row" style="border:1px solid #89ca84;">    
         <div class="col">
-            {{device.owner.username}}
+            <p>{{device.owner.username}}</p>
         </div>
         <div class="col">
-            {{device.id}}
+            <p>{{device.id}}</p>
         </div>
         <div class="col">
-            <p><a href="{{ url_for('devices.device', device_id=device.id) }}">{{device.devicename}}</a></p>
+            <p>{{device.devicename}}</p>
         </div>
         <div class="col">
-            {{device.devicetype}}
+            <p>{{device.devicetype}}</p>
         </div>     
     </div>
-    <div class="row">
-        <div class="row">
-            {{ device.datadumps[-1]}}
-        </div>
-    </div>
+    </a>
     {% endfor %}
 </div>
 
