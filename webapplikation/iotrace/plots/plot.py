@@ -1,3 +1,4 @@
+import os
 import io
 import base64
 from flask import Blueprint, render_template
@@ -5,7 +6,8 @@ from flask_login import login_required, current_user
 from matplotlib.figure import Figure
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from iotrace import maps
+from iotrace import googlemaps
+from flask_googlemaps import Map
 from iotrace.models import Device, Dummydata 
 
 plots = Blueprint('plots', __name__)
@@ -115,8 +117,14 @@ def device_lte_rssi(datadumps):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-
-
+def device_pos(datadumps):
+	pos = []
+	time = []
+	for item in datadumps:
+		pos.append(item.pos)
+	lng, lat = pos[-1].split(',')
+	GOOGLEMAPS_KEY =  os.environ.get('GOOGLEMAPS_KEY')	
+	return f'lat: {lat}, lng: {lng}', GOOGLEMAPS_KEY
 
 
 
@@ -132,8 +140,36 @@ def plot1(device_id):
 	hpa = device_hpa(device.datadumps)
 	volt = device_volt(device.datadumps)
 	lte_rssi = device_lte_rssi(device.datadumps)
+	pos = device_pos(device.datadumps)
 
 
-	return render_template('plots/plot1.html', temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi)
+	return render_template('plots/plot1.html', temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, pos=pos)
 
 
+def all_device_pos(devices):
+	device_pos = []
+	for device in devices:
+		lng, lat = device.datadumps[-1].pos.split(',')
+		label = device.devicename
+		device_pos.append([lng, lat, label])		
+	GOOGLEMAPS_KEY =  os.environ.get('GOOGLEMAPS_KEY')
+	return device_pos, GOOGLEMAPS_KEY
+
+
+@plots.route('/map')
+@login_required
+def mapTest():
+	devices = Device.query.filter_by(user_id=current_user.id)
+	test, GOOGLEMAPS_KEY = all_device_pos(devices)	
+	return render_template('plots/maptest.html', GOOGLEMAPS_KEY=GOOGLEMAPS_KEY, test=test)
+
+@plots.route('/plots/map/<int:device_id>')
+@login_required
+def mapview(device_id):
+	device = Device.query.get_or_404(device_id)
+	if device.owner != current_user:
+		abort(403)
+	pos , GOOGLEMAPS_KEY = device_pos(device.datadumps)
+
+
+	return render_template('plots/map.html', GOOGLEMAPS_KEY=GOOGLEMAPS_KEY, pos=pos)

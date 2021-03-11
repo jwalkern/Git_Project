@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% set active_page = "dashboard" %}
+
+{% block content %}
+
+
+
+
+
+<div id="map" style="width:475px;height:400px;"></div>
+
+<script>
+    function initMap() {
+        var location = { lat: 0, lng: 0 };
+        var map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 1,
+            center: location
+        });
+        {% for item in test %}
+        var marker = new google.maps.Marker({
+            position: {lat:{{item[1]}},lng:{{item[0]}}},
+            map: map,
+            label:"{{ item[2] }}"
+        });
+        {% endfor %}
+    }
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}&callback=initMap"></script>
+
+
+{% endblock content %}

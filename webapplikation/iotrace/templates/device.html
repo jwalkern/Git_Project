@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<legend class="border-bottom mb-4">Edit device</legend>
+<legend class="border-bottom mb-4">Device Data</legend>
 <div class="container">
     <div class="row justify-content-md-center">
         {%for i in current_user.devices %}
@@ -33,11 +33,32 @@
     </div>     
 </div>
 
-<img = src="{{ temp }}"/>
-<img = src="{{ humid }}"/>
-<img = src="{{ hpa }}"/>
-<img = src="{{ volt }}"/>
-<img = src="{{ lte_rssi }}"/>
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
+            <div id="map" style="width:475px;height:400px;"></div>
+        </div>
+        <div class="col-md-auto">
+            <img = src="{{ temp }}" style="width:475px;height:400px;"/>
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
+            <img = src="{{ humid }}"style="width:475px;height:400px;"/>
+        </div>
+        <div class="col-md-auto">
+            <img = src="{{ hpa }}"style="width:475px;height:400px;"/>
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
+            <img = src="{{ volt }}"style="width:475px;height:400px;"/>
+        </div>
+        <div class="col-md-auto">
+            <img = src="{{ lte_rssi }}"style="width:475px;height:400px;"/>
+        </div>
+    </div>
+</div>
 
 
 <!-- Modal -->
@@ -60,5 +81,26 @@
     </div>
   </div>
 </div>
+
+
+<script>
+    function initMap() {
+        var location = { {{ pos }} };
+        var map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 3,
+            center: location
+        });
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map
+        });
+    }
+
+
+
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}&callback=initMap"></script>
 
 {% endblock content %}

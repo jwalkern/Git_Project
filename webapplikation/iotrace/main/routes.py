@@ -1,10 +1,18 @@
 import random
 from flask import Blueprint, render_template, flash
-from iotrace import db
-from iotrace.models import Device, Dummydata
+from flask_admin.contrib.sqla import ModelView
+from iotrace import db, admin
+from iotrace.models import User, Device, Dummydata
 from iotrace.main.forms import GenerateDummyData
 
 main = Blueprint('main', __name__)
+
+
+class Admin_Model_View(ModelView):
+    def is_accessible(self):
+        return False
+admin.add_view(Admin_Model_View(User, db.session))
+admin.add_view(Admin_Model_View(Device, db.session))
 
 #Dette er vores startside og viser index.html 
 @main.route('/')

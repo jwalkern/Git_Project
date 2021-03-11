@@ -26,4 +26,30 @@
     {% endfor %}
 </div>
 
+<div id="map" style="width:100%;height:500px;"></div>
+
+<script>
+    function initMap() {
+        var location = { lat: 0, lng: 0 };
+        var map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 1,
+            center: location
+        });
+        {% for device in all_device %}
+        var marker = new google.maps.Marker({
+            position: { lat:{{device[1]}},lng:{{device[0]}}},
+            map: map,
+            label: "{{ device[2] }}"
+        });
+        {% endfor %}
+    }
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}&callback=initMap"></script>
+
+
+
+
+
 {% endblock content %}

@@ -10,6 +10,7 @@ from iotrace.accounts.utils import save_picture, send_reset_email
 
 accounts = Blueprint('accounts', __name__)
 
+
 @accounts.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
