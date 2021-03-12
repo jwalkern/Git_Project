@@ -10,7 +10,7 @@ main = Blueprint('main', __name__)
 
 class Admin_Model_View(ModelView):
     def is_accessible(self):
-        return False
+        return True
 admin.add_view(Admin_Model_View(User, db.session))
 admin.add_view(Admin_Model_View(Device, db.session))
 
