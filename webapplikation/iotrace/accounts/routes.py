@@ -24,7 +24,7 @@ def login():
             return redirect(next_page) if next_page else redirect(url_for('devices.dashboard'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
-    return render_template('login.html', title='Login', form=form)
+    return render_template('accounts/signin.html', title='Login', form=form)
 
 @accounts.route('/register', methods=['GET', 'POST'])
 def register():

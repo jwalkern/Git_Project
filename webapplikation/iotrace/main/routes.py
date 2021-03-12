@@ -1,5 +1,6 @@
 import random
 from flask import Blueprint, render_template, flash
+from flask_login import login_required
 from flask_admin.contrib.sqla import ModelView
 from iotrace import db, admin
 from iotrace.models import User, Device, Dummydata
@@ -17,6 +18,7 @@ admin.add_view(Admin_Model_View(Device, db.session))
 #Dette er vores startside og viser index.html 
 @main.route('/')
 @main.route(('/home'))
+@login_required
 def home():    
     return render_template('home.html')
 
