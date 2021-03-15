@@ -38,7 +38,6 @@ class User(db.Model, UserMixin):
     
 class Device(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    device_mac = db.Column(db.String(20), nullable=False)
     devicename = db.Column(db.String(100), nullable=False)
     devicetype = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

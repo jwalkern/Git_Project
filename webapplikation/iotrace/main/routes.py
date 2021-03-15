@@ -1,6 +1,6 @@
 import random
-from flask import Blueprint, render_template, flash
-from flask_login import login_required
+from flask import Blueprint, render_template, url_for, flash, redirect
+from flask_login import login_required, current_user
 from flask_admin.contrib.sqla import ModelView
 from iotrace import db, admin
 from iotrace.models import User, Device, Dummydata
@@ -14,13 +14,15 @@ class Admin_Model_View(ModelView):
         return True
 admin.add_view(Admin_Model_View(User, db.session))
 admin.add_view(Admin_Model_View(Device, db.session))
+admin.add_view(Admin_Model_View(Dummydata, db.session))
 
 #Dette er vores startside og viser index.html 
 @main.route('/')
 @main.route(('/home'))
-@login_required
-def home():    
-    return render_template('home.html')
+def home(methods=['GET', 'POST']):    
+    if current_user.is_authenticated:
+        return redirect(url_for('devices.dashboard'))
+    return redirect(url_for('accounts.login'))
 
 def random_generate():
     pos = str(round(random.uniform(-180,180),6))+','+ str(round(random.uniform(-90,90),6))
