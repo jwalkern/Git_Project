@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
-    devices = db.relationship('Device', backref='owner', lazy=True)
+    devices = db.relationship('Device', cascade='all, delete-orphan', backref='owner', lazy=True)
     
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
@@ -38,6 +38,7 @@ class User(db.Model, UserMixin):
     
 class Device(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    device_mac = db.Column(db.String(20), nullable=False)
     devicename = db.Column(db.String(100), nullable=False)
     devicetype = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
