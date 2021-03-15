@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField
 
-class GenerateDummyData(FlaskForm):
+class GenerateTrackingDeviceData(FlaskForm):
     submit = SubmitField('Generate Dummy Data!')

@@ -40,28 +40,37 @@ class Device(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     devicename = db.Column(db.String(100), nullable=False)
     devicetype = db.Column(db.String(100), nullable=False)
+    device_mac = db.Column(db.String(20), unique=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    datadumps = db.relationship('Dummydata', cascade='all, delete-orphan', backref='devicedata', lazy=True)
+    data_trackingdevice = db.relationship('TrackingDeviceData', cascade='all, delete-orphan', backref='ref_trackingdevice', lazy=True)
+    data_firedevice = db.relationship('FireDeviceData', cascade='all, delete-orphan', backref='ref_firedevice', lazy=True)
     
     
     def __repr__(self):
-        return f"{self.id}"
+        return f"Device('{self.id}', '{self.devicetype}', '{self.device_mac}')"
     
-class Dummydata(db.Model):
+class TrackingDeviceData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    pos = db.Column(db.String(100), nullable=False)
-    temp = db.Column(db.Integer, nullable=False)
-    humid = db.Column(db.Integer, nullable=False)
-    hpa = db.Column(db.Integer, nullable=False)
-    volt = db.Column(db.Integer, nullable=False)
-    lte_rssi = db.Column(db.Integer, nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
+    pos = db.Column(db.String(100), nullable=True)
+    temp = db.Column(db.Integer, nullable=True)
+    humid = db.Column(db.Integer, nullable=True)
+    hpa = db.Column(db.Integer, nullable=True)
+    volt = db.Column(db.Integer, nullable=True)
+    lte_rssi = db.Column(db.Integer, nullable=True)
     device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False)
     
     def __repr__(self):
-        return f"Dummydata('{self.timestamp}', '{self.pos}', '{self.temp}', '{self.humid}', '{self.hpa}', '{self.volt}', '{self.lte_rssi}')"
+        return f"TrackingDeviceData('{self.timestamp}', '{self.pos}', '{self.temp}', '{self.humid}', '{self.hpa}', '{self.volt}', '{self.lte_rssi}')"
+   
+class FireDeviceData(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
+    alarm_1 = db.Column(db.Boolean, nullable=True)
+    alarm_2 = db.Column(db.Boolean, nullable=True)
+    volt = db.Column(db.Integer, nullable=True)
+    lte_rssi = db.Column(db.Integer, nullable=True)
+    device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False)
 
-
-
-
-    
+    def __repr__(self):
+        return f"FireDeviceData('{self.timestamp}', '{self.alarm_1}', '{self.alarm_2}', '{self.volt}', '{self.lte_rssi}')"

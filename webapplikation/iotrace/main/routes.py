@@ -3,8 +3,8 @@ from flask import Blueprint, render_template, url_for, flash, redirect
 from flask_login import login_required, current_user
 from flask_admin.contrib.sqla import ModelView
 from iotrace import db, admin
-from iotrace.models import User, Device, Dummydata
-from iotrace.main.forms import GenerateDummyData
+from iotrace.models import User, Device, TrackingDeviceData
+from iotrace.main.forms import GenerateTrackingDeviceData
 
 main = Blueprint('main', __name__)
 
@@ -14,7 +14,7 @@ class Admin_Model_View(ModelView):
         return True
 admin.add_view(Admin_Model_View(User, db.session))
 admin.add_view(Admin_Model_View(Device, db.session))
-admin.add_view(Admin_Model_View(Dummydata, db.session))
+admin.add_view(Admin_Model_View(TrackingDeviceData, db.session))
 
 #Dette er vores startside og viser index.html 
 @main.route('/')
@@ -36,11 +36,11 @@ def random_generate():
 @main.route('/generate/data', methods=['GET', 'POST'])
 def dummy():
     device = Device.query.all()
-    form = GenerateDummyData()
+    form = GenerateTrackingDeviceData()
     if form.validate_on_submit():
         for item in range(len(device)):
             pos, temp, humid, hpa, volt, lte_rssi = random_generate()
-            data = Dummydata(pos=pos, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, device_id=(item+1))
+            data = TrackingDeviceData(pos=pos, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, device_id=(item+1))
             db.session.add(data)
         db.session.commit()
         flash('Data generated!', 'success')  

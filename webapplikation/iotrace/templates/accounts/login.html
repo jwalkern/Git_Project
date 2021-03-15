@@ -1,36 +1,65 @@
-{% extends "layout.html" %}
-{% set active_page = "login" %}
-{% block content %}
-<div class="container text-center">
-    
-        <form method="POST" action="">
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}">
+        <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/navbars/"> 
+              
+        {% if title %}        
+            <title>ioTrace - {{ title }}</title>
+        {% else %}
+            <title>ioTrace</title>
+        {% endif %}    
+        {% block head %}{% endblock %} 
+
+        <!-- Bootstrap core CSS TEST-->
+        <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">       
+        <link href="{{url_for('static', filename='css/signin.css')}}" rel="stylesheet">         
+
+    </head>       
+    <body> 
+        <main class="form-signin">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        
+            <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Log In</legend>
+                <img src="{{ url_for('static', filename='images/ioTrace.png') }}" alt="" width="215" height="80"> 
+                <h1 class="h3 mb-3 fw-normal">Login</h1>
                 <div class="form-group">
                     {{ form.email.label(class="form-control-label") }}
                     {% if form.email.errors %}
-                        {{ form.email(class="form-control form-control-lg is-invalid") }}
+                        {{ form.email(class="form-control form-control is-invalid") }}
                         <div class="invalid-feedback">
                             {% for error in form.email.errors %}
                                 <span>{{ error }}</span>
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.email(class="form-control form-control-lg") }}
+                        {{ form.email(class="form-control form-control") }}
                     {% endif %}
                 </div>
                 <div class="form-group">
                     {{ form.password.label(class="form-control-label") }}
                     {% if form.password.errors %}
-                        {{ form.password(class="form-control form-control-lg is-invalid") }}
+                        {{ form.password(class="form-control form-control is-invalid") }}
                         <div class="invalid-feedback">
                             {% for error in form.password.errors %}
                                 <span>{{ error }}</span>
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.password(class="form-control form-control-lg") }}
+                        {{ form.password(class="form-control form-control") }}
                     {% endif %}
                 </div>
                 <div class="form-chek">
@@ -44,12 +73,14 @@
                     <a href="{{ url_for('accounts.reset_request') }}">Forgot Password?</a>
                 </small>
             </div>
-        </form>
+            </form>
 
-        <div class="border-top pt-3">
-        <small class="text-muted">
-            Need An Account? <a class="ml-2" href="{{ url_for('accounts.register') }}">Sign Up Now</a>
-        </small>
-        </div>
-    </div>
-{% endblock content %}
+            <div class="border-top pt-3">
+            <small class="text-muted">
+                Need An Account? <a class="ml-2" href="{{ url_for('accounts.register') }}">Sign Up Now</a>
+            </small>
+            </form>
+        </main>                         
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    </body>
+</html>

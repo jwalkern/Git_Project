@@ -56,11 +56,3 @@ def get_device_by_userID(userID):
             device_list = 'No device in DB'
     conn.close()
     return device_list
-    
-
-def add_device(item):
-    conn = open_connection()
-    with conn.cursor() as cursor:
-        cursor.execute('INSERT INTO device ( hpa, humid) VALUES (%s, %s, %d, %d, %d, %d, %d)', (item['deviceName'], item['pos'], item['lte_rssi'], item['volt'], item['temp'], item['hpa'], item['humid']))
-    conn.commit()
-    conn.close()

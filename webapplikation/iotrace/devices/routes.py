@@ -2,7 +2,7 @@ import os
 from flask import Blueprint, render_template, redirect, request, abort, flash, url_for
 from flask_login import login_required, current_user
 from iotrace import db
-from iotrace.models import Device, Dummydata
+from iotrace.models import Device, TrackingDeviceData
 from iotrace.devices.forms import CreateDeviceForm
 from iotrace.plots.plot import device_temp, device_humid, device_hpa, device_volt, device_lte_rssi, device_pos, all_device_pos
 
@@ -14,7 +14,7 @@ devices = Blueprint('devices', __name__)
 def dashboard():
     devices = Device.query.filter_by(user_id=current_user.id)
     all_device, GOOGLEMAPS_KEY = all_device_pos(devices)
-    return render_template('dashboard.html', title='Dashboard', devices=devices, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY, all_device=all_device)
+    return render_template('devices/dashboard.html', title='Dashboard', devices=devices, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY, all_device=all_device)
 
 
 @devices.route('/dashboard/device/data/<device_id>')
@@ -23,15 +23,15 @@ def device(device_id):
     device = Device.query.get_or_404(device_id)
     if current_user != device.owner:
         abort(403)
-    temp = device_temp(device.datadumps)
-    humid = device_humid(device.datadumps)
-    hpa = device_hpa(device.datadumps)
-    volt = device_volt(device.datadumps)
-    lte_rssi = device_lte_rssi(device.datadumps)
-    pos, GOOGLEMAPS_KEY = device_pos(device.datadumps)
-    return render_template('device.html', title=device.devicename, device=device, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, pos=pos, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY)
+    temp = device_temp(device.data_trackingdevice)
+    humid = device_humid(device.data_trackingdevice)
+    hpa = device_hpa(device.data_trackingdevice)
+    volt = device_volt(device.data_trackingdevice)
+    lte_rssi = device_lte_rssi(device.data_trackingdevice)
+    pos, GOOGLEMAPS_KEY = device_pos(device.data_trackingdevice)
+    return render_template('devices/device.html', title=device.devicename, device=device, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, pos=pos, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY)
 
-@devices.route('/dashboard/device/update/<device_id>', methods=['GET', 'POST'])
+@devices.route('/dashboard/device/edit/<device_id>', methods=['GET', 'POST'])
 @login_required
 def update_device(device_id):
     device = Device.query.get_or_404(device_id)
@@ -47,7 +47,7 @@ def update_device(device_id):
     elif request.method == 'GET':
         form.devicename.data = device.devicename
         form.devicetype.data = device.devicetype
-    return render_template('edit_device.html', title='Update Device', form=form, legend='Update device')
+    return render_template('devices/edit_device.html', title='Update Device', form=form, legend='Update device')
  
 @devices.route('/dashboard/device/delete/<device_id>', methods=['POST'])
 @login_required
@@ -65,10 +65,10 @@ def delete_device(device_id):
 def add_device():
     form = CreateDeviceForm()
     if form.validate_on_submit():
-        device = Device(devicename=form.devicename.data, devicetype=form.devicetype.data, owner=current_user)
+        device = Device(device_mac=form.device_mac.data ,devicename=form.devicename.data, devicetype=form.devicetype.data, owner=current_user)
         db.session.add(device)
         db.session.commit()
         flash('The device have been added!', 'success')
         return redirect(url_for('devices.dashboard'))
-    return render_template('edit_device.html', title='Add Device', form=form, legend='Add device')
+    return render_template('devices/add_device.html', title='Add Device', form=form)
 

@@ -8,14 +8,14 @@ from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from iotrace import googlemaps
 from flask_googlemaps import Map
-from iotrace.models import Device, Dummydata 
+from iotrace.models import Device, TrackingDeviceData 
 
 plots = Blueprint('plots', __name__)
 
-def device_temp(datadumps):
+def device_temp(data_trackingdevice):
 	time = []
 	temp = []
-	for item in datadumps:
+	for item in data_trackingdevice:
 		time.append(item.timestamp.strftime('%d-%m-%Y'))
 		temp.append(item.temp)
 	# Generate plot
@@ -32,11 +32,11 @@ def device_temp(datadumps):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def device_humid(datadumps):
+def device_humid(data_trackingdevice):
 	time = []
 	humid = []
 	# Fetching data
-	for item in datadumps:
+	for item in data_trackingdevice:
 		time.append(item.timestamp.strftime('%d-%m-%Y'))
 		humid.append(item.humid)
 	# Generate plot
@@ -53,11 +53,11 @@ def device_humid(datadumps):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def device_hpa(datadumps):
+def device_hpa(data_trackingdevice):
 	time = []
 	hpa = []
 	# Fetching data
-	for item in datadumps:
+	for item in data_trackingdevice:
 		time.append(item.timestamp.strftime('%d-%m-%Y'))
 		hpa.append(item.hpa)
 	# Generate plot
@@ -74,11 +74,11 @@ def device_hpa(datadumps):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def device_volt(datadumps):
+def device_volt(data_trackingdevice):
 	time = []
 	volt = []
 	# Fetching data
-	for item in datadumps:
+	for item in data_trackingdevice:
 		time.append(item.timestamp.strftime('%d-%m-%Y'))
 		volt.append(item.volt)
 	# Generate plot
@@ -96,11 +96,11 @@ def device_volt(datadumps):
 	return PNG
 
 
-def device_lte_rssi(datadumps):
+def device_lte_rssi(data_trackingdevice):
 	time = []
 	lte_rssi = []
 	# Fetching data
-	for item in datadumps:
+	for item in data_trackingdevice:
 		time.append(item.timestamp.strftime('%d-%m-%Y'))
 		lte_rssi.append(item.lte_rssi)
 	# Generate plot
@@ -117,10 +117,10 @@ def device_lte_rssi(datadumps):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def device_pos(datadumps):
+def device_pos(data_trackingdevice):
 	pos = []
 	time = []
-	for item in datadumps:
+	for item in data_trackingdevice:
 		pos.append(item.pos)
 	lng, lat = pos[-1].split(',')
 	GOOGLEMAPS_KEY =  os.environ.get('GOOGLEMAPS_KEY')	
@@ -135,12 +135,12 @@ def plot1(device_id):
 	if device.owner != current_user:
 		abort(403)
 	
-	temp = device_temp(device.datadumps)
-	humid = device_humid(device.datadumps)
-	hpa = device_hpa(device.datadumps)
-	volt = device_volt(device.datadumps)
-	lte_rssi = device_lte_rssi(device.datadumps)
-	pos = device_pos(device.datadumps)
+	temp = device_temp(device.data_trackingdevice)
+	humid = device_humid(device.data_trackingdevice)
+	hpa = device_hpa(device.data_trackingdevice)
+	volt = device_volt(device.data_trackingdevice)
+	lte_rssi = device_lte_rssi(device.data_trackingdevice)
+	pos = device_pos(device.data_trackingdevice)
 
 
 	return render_template('plots/plot1.html', temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, pos=pos)
@@ -149,10 +149,14 @@ def plot1(device_id):
 def all_device_pos(devices):
 	device_pos = []
 	for device in devices:
-		lng, lat = device.datadumps[-1].pos.split(',')
-		label = device.devicename
-		device_pos.append([lng, lat, label])		
-	GOOGLEMAPS_KEY =  os.environ.get('GOOGLEMAPS_KEY')
+		try:
+			lng, lat = device.data_trackingdevice[-1].pos.split(',')
+			label = device.devicename
+			device_pos.append([lng, lat, label])
+		except:
+			pass
+
+	GOOGLEMAPS_KEY = os.environ.get('GOOGLEMAPS_KEY')
 	return device_pos, GOOGLEMAPS_KEY
 
 
@@ -169,7 +173,7 @@ def mapview(device_id):
 	device = Device.query.get_or_404(device_id)
 	if device.owner != current_user:
 		abort(403)
-	pos , GOOGLEMAPS_KEY = device_pos(device.datadumps)
+	pos , GOOGLEMAPS_KEY = device_pos(device.data_trackingdevice)
 
 
 	return render_template('plots/map.html', GOOGLEMAPS_KEY=GOOGLEMAPS_KEY, pos=pos)

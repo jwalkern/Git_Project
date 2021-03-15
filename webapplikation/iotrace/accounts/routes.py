@@ -24,7 +24,7 @@ def login():
             return redirect(next_page) if next_page else redirect(url_for('devices.dashboard'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
-    return render_template('accounts/signin.html', title='Login', form=form)
+    return render_template('accounts/login.html', title='Login', form=form)
 
 @accounts.route('/register', methods=['GET', 'POST'])
 def register():
@@ -38,7 +38,7 @@ def register():
         db.session.commit()
         flash('Your account has been created! You can now log in.', 'success')
         return redirect(url_for('accounts.login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('accounts/register.html', title='Register', form=form)
 
 @accounts.route('/logout')
 def logout():
@@ -63,7 +63,7 @@ def account():
         form.email.data = current_user.email        
     image_file = url_for('static', filename='images/profile_pics/' + current_user.image_file)
     devices = Device.query.filter_by(user_id=current_user.id)
-    return render_template('account.html', title='Account', image_file=image_file, devices=devices, form=form)
+    return render_template('accounts/account.html', title='Account', image_file=image_file, devices=devices, form=form)
 
 @accounts.route('/reset_password', methods=['GET', 'POST'])
 def reset_request():
@@ -75,7 +75,7 @@ def reset_request():
         send_reset_email(user)
         flash('An email have been sent with instruction to reset your password', 'info')
         return redirect(url_for('accounts.login'))
-    return render_template('reset_request.html', title='Reset Password', form=form)
+    return render_template('accounts/reset_request.html', title='Reset Password', form=form)
 
 @accounts.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_token(token):
@@ -92,4 +92,4 @@ def reset_token(token):
        db.session.commit()
        flash('Your password has now been updated! You can now log in.', 'success')
        return redirect(url_for('accounts.login'))
-    return render_template('reset_token.html', title='Reset Password', form=form)
+    return render_template('accounts/reset_token.html', title='Reset Password', form=form)
