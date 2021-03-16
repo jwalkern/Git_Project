@@ -87,7 +87,7 @@
 
 <script>
     function initMap() {
-        var location = { "57 01.7222N 09 55.1574E" };
+        var location = { {{ pos}} };
         var map = new google.maps.Map(document.getElementById("map"), {
             zoom: 10,
             center: location

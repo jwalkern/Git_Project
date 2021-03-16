@@ -16,6 +16,9 @@
             <p>{{device.id}}</p>
         </div>
         <div class="col">
+            <p>{{device.device_mac}}</p>
+        </div>
+        <div class="col">
             <p>{{device.devicename}}</p>
         </div>
         <div class="col">
@@ -37,9 +40,9 @@
         });
         {% for device in all_device %}
         var marker = new google.maps.Marker({
-            position: { lat:{{device[1]}},lng:{{device[0]}}},
+            position: { {{device[0]}} },
             map: map,
-            label: "{{ device[2] }}"
+            label: "{{ device[1] }}"
         });
         {% endfor %}
     }

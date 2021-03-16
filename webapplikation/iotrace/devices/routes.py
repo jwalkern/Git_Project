@@ -29,10 +29,10 @@ def device(device_id):
         hpa = device_hpa(device.data_trackingdevice)
         volt = device_volt(device.data_trackingdevice)
         lte_rssi = device_lte_rssi(device.data_trackingdevice)
-        GOOGLEMAPS_KEY = device_pos(device.data_trackingdevice)
+        pos, GOOGLEMAPS_KEY = device_pos(device.data_trackingdevice)
     elif device.devicetype == 'fire':
         pass
-    return render_template('devices/device.html', title=device.devicename, device=device, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY)
+    return render_template('devices/device.html', title=device.devicename, device=device, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, pos=pos, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY)
 
 @devices.route('/dashboard/device/edit/<device_id>', methods=['GET', 'POST'])
 @login_required

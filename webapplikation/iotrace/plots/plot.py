@@ -118,21 +118,47 @@ def device_lte_rssi(data_trackingdevice):
 	return PNG
 
 def device_pos(data_trackingdevice):
-	
+	for item in data_trackingdevice:
+		try:
+			Lat = item.pos.split(',')[1].translate({ord(i): None for i in 'NS'})
+			LAT_DD = int(float(Lat)/100)
+			LAT_SS = float(Lat) - LAT_DD * 100
+			LatDec = LAT_DD + LAT_SS/60
+
+			Lng = item.pos.split(',')[2].translate({ord(i): None for i in 'EW'})
+			LNG_DD = int(float(Lng)/100)
+			LNG_SS = float(Lng) - LNG_DD * 100
+			LngDec = LNG_DD + LNG_SS/60
+		except:
+			pass
+	pos = f'lat:{LatDec}, lng:{LngDec}'
 	GOOGLEMAPS_KEY =  os.environ.get('GOOGLEMAPS_KEY')	
-	return GOOGLEMAPS_KEY
+	return pos, GOOGLEMAPS_KEY
 
 
 def all_device_pos(devices):
 	device_pos = []
 	for device in devices:
-		try:
-			lng, lat = device.data_trackingdevice[-1].pos.split(',')
-			label = device.devicename
-			device_pos.append([lng, lat, label])
-		except:
-			pass
+		if device.devicetype != 'fire':
+			try:
+				Lat = device.data_trackingdevice[-1].pos.split(',')[1].translate({ord(i): None for i in 'NS'})
+				LAT_DD = int(float(Lat)/100)
+				LAT_SS = float(Lat) - LAT_DD * 100
+				LatDec = LAT_DD + LAT_SS/60
 
+				Lng = device.data_trackingdevice[-1].pos.split(',')[2].translate({ord(i): None for i in 'EW'})
+				LNG_DD = int(float(Lng)/100)
+				LNG_SS = float(Lng) - LNG_DD * 100
+				LngDec = LNG_DD + LNG_SS/60
+
+				pos = f'lat:{LatDec}, lng:{LngDec}'
+				label = device.devicename
+				
+				device_pos.append([pos, label])
+			except:
+				continue
+		else:
+			continue
 	GOOGLEMAPS_KEY = os.environ.get('GOOGLEMAPS_KEY')
 	return device_pos, GOOGLEMAPS_KEY
 
