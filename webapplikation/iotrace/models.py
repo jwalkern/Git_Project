@@ -51,7 +51,7 @@ class Device(db.Model):
     
 class TrackingDeviceData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    timestamp = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, nullable=True)
     pos = db.Column(db.String(100), nullable=True)
     temp = db.Column(db.Integer, nullable=True)
     humid = db.Column(db.Integer, nullable=True)
@@ -65,7 +65,7 @@ class TrackingDeviceData(db.Model):
    
 class FireDeviceData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    timestamp = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, nullable=True)
     alarm_1 = db.Column(db.Boolean, nullable=True)
     alarm_2 = db.Column(db.Boolean, nullable=True)
     volt = db.Column(db.Integer, nullable=True)

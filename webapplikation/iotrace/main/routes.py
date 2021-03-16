@@ -1,9 +1,11 @@
-import random
+import os
+import datetime
+import json
 from flask import Blueprint, render_template, url_for, flash, redirect
 from flask_login import login_required, current_user
 from flask_admin.contrib.sqla import ModelView
 from iotrace import db, admin
-from iotrace.models import User, Device, TrackingDeviceData
+from iotrace.models import User, Device, TrackingDeviceData, FireDeviceData
 from iotrace.main.forms import GenerateTrackingDeviceData
 
 main = Blueprint('main', __name__)
@@ -24,25 +26,47 @@ def home(methods=['GET', 'POST']):
         return redirect(url_for('devices.dashboard'))
     return redirect(url_for('accounts.login'))
 
-def random_generate():
-    pos = str(round(random.uniform(-180,180),6))+','+ str(round(random.uniform(-90,90),6))
-    temp = round(random.uniform(1500,3000))
-    humid = round(random.uniform(35000,65000))
-    hpa = round(random.uniform(10000000,20000000))
-    volt = round(random.uniform(15000,65000))
-    lte_rssi = round(random.uniform(-100,0))
-    return pos, temp, humid, hpa, volt, lte_rssi
 
 @main.route('/generate/data', methods=['GET', 'POST'])
 def dummy():
-    device = Device.query.all()
+    
     form = GenerateTrackingDeviceData()
     if form.validate_on_submit():
-        for item in range(len(device)):
-            pos, temp, humid, hpa, volt, lte_rssi = random_generate()
-            data = TrackingDeviceData(pos=pos, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, device_id=(item+1))
-            db.session.add(data)
-        db.session.commit()
-        flash('Data generated!', 'success')  
+        device = Device.query.filter_by(device_mac=form.device_mac.data).first()
+        if form.devicetype.data != 'fire':
+            with open("D:/Git_projects/iotrace/datadump/D083D4003ADD.txt") as obj:
+                file = obj.read()
+            js = json.loads(file)
+            for item in js:
+                timestamp = datetime.datetime.strptime(item['ts'].translate({ord(i): None for i in 'TZ'}), '%Y-%m-%d%H:%M:%S.%f')
+                pos = item['data']['pos']
+                temp = item['data']['temp']
+                humid = item['data']['humid']
+                hpa = item['data']['hpa']
+                volt = item['data']['volt']
+                lte_rssi = item['data']['lte_rssi']
+                pos = item['data']['pos']
+                device_id = device.id
+                data = TrackingDeviceData(device_id=device_id, timestamp=timestamp, pos=pos, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi)
+                db.session.add(data)
+            db.session.commit()
+            flash('Data generated!', 'success')
+        elif form.devicetype.data == 'fire':
+            with open("D:/Git_projects/iotrace/datadump/D083D4003F80.txt") as obj:
+                file = obj.read()
+            js = json.loads(file)
+            for item in js:
+                timestamp = datetime.datetime.strptime(item['ts'].translate({ord(i): None for i in 'TZ'}), '%Y-%m-%d%H:%M:%S.%f')
+                volt = item['data']['volt']
+                alarm_1 = item['data']['alarm_1']
+                alarm_2 = item['data']['alarm_2']
+                lte_rssi = item['data']['lte_rssi']                
+                device_id = device.id
+                data = FireDeviceData(device_id=device_id, timestamp=timestamp, alarm_1=alarm_1, alarm_2=alarm_2, volt=volt, lte_rssi=lte_rssi)
+                db.session.add(data)
+            db.session.commit()
+            flash('Data generated!', 'success')
+        else:
+            pass  
     return render_template('dummy_data.html', title='GDD', form=form) 
 
