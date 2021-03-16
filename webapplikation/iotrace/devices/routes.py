@@ -23,13 +23,16 @@ def device(device_id):
     device = Device.query.get_or_404(device_id)
     if current_user != device.owner:
         abort(403)
-    temp = device_temp(device.data_trackingdevice)
-    humid = device_humid(device.data_trackingdevice)
-    hpa = device_hpa(device.data_trackingdevice)
-    volt = device_volt(device.data_trackingdevice)
-    lte_rssi = device_lte_rssi(device.data_trackingdevice)
-    pos, GOOGLEMAPS_KEY = device_pos(device.data_trackingdevice)
-    return render_template('devices/device.html', title=device.devicename, device=device, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, pos=pos, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY)
+    if device.devicetype != 'fire':
+        temp = device_temp(device.data_trackingdevice)
+        humid = device_humid(device.data_trackingdevice)
+        hpa = device_hpa(device.data_trackingdevice)
+        volt = device_volt(device.data_trackingdevice)
+        lte_rssi = device_lte_rssi(device.data_trackingdevice)
+        GOOGLEMAPS_KEY = device_pos(device.data_trackingdevice)
+    elif device.devicetype == 'fire':
+        pass
+    return render_template('devices/device.html', title=device.devicename, device=device, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY)
 
 @devices.route('/dashboard/device/edit/<device_id>', methods=['GET', 'POST'])
 @login_required

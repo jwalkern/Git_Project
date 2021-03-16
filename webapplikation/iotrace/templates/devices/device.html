@@ -33,33 +33,35 @@
     </div>     
 </div>
 
-<div class="container">
-    <div class="row justify-content-md-center">
-        <div class="col-md-auto">
-            <div id="map" style="width:475px;height:400px;"></div>
-        </div>
-        <div class="col-md-auto">
-            <img = src="{{ temp }}" style="width:475px;height:400px;"/>
-        </div>
-    </div>
-    <div class="row justify-content-md-center">
-        <div class="col-md-auto">
-            <img = src="{{ humid }}"style="width:475px;height:400px;"/>
-        </div>
-        <div class="col-md-auto">
-            <img = src="{{ hpa }}"style="width:475px;height:400px;"/>
-        </div>
-    </div>
-    <div class="row justify-content-md-center">
-        <div class="col-md-auto">
-            <img = src="{{ volt }}"style="width:475px;height:400px;"/>
-        </div>
-        <div class="col-md-auto">
-            <img = src="{{ lte_rssi }}"style="width:475px;height:400px;"/>
-        </div>
-    </div>
-</div>
+{% if device.devicetype != "fire" %}
 
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <div id="map" style="width:475px;height:400px;"></div>
+            </div>
+            <div class="col-md-auto">
+                <img = src="{{ temp }}" style="width:475px;height:400px;"/>
+            </div>
+        </div>
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <img = src="{{ humid }}"style="width:475px;height:400px;"/>
+            </div>
+            <div class="col-md-auto">
+                <img = src="{{ hpa }}"style="width:475px;height:400px;"/>
+            </div>
+        </div>
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <img = src="{{ volt }}"style="width:475px;height:400px;"/>
+            </div>
+            <div class="col-md-auto">
+                <img = src="{{ lte_rssi }}"style="width:475px;height:400px;"/>
+            </div>
+        </div>
+    </div>
+{% endif %}
 
 <!-- Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -85,7 +87,7 @@
 
 <script>
     function initMap() {
-        var location = { {{ pos }} };
+        var location = { "57 01.7222N 09 55.1574E" };
         var map = new google.maps.Map(document.getElementById("map"), {
             zoom: 10,
             center: location

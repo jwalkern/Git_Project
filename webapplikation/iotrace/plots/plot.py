@@ -118,13 +118,24 @@ def device_lte_rssi(data_trackingdevice):
 	return PNG
 
 def device_pos(data_trackingdevice):
-	pos = []
-	time = []
-	for item in data_trackingdevice:
-		pos.append(item.pos)
-	lng, lat = pos[-1].split(',')
+	
 	GOOGLEMAPS_KEY =  os.environ.get('GOOGLEMAPS_KEY')	
-	return f'lat: {lat}, lng: {lng}', GOOGLEMAPS_KEY
+	return GOOGLEMAPS_KEY
+
+
+def all_device_pos(devices):
+	device_pos = []
+	for device in devices:
+		try:
+			lng, lat = device.data_trackingdevice[-1].pos.split(',')
+			label = device.devicename
+			device_pos.append([lng, lat, label])
+		except:
+			pass
+
+	GOOGLEMAPS_KEY = os.environ.get('GOOGLEMAPS_KEY')
+	return device_pos, GOOGLEMAPS_KEY
+
 
 
 
@@ -144,20 +155,6 @@ def plot1(device_id):
 
 
 	return render_template('plots/plot1.html', temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, pos=pos)
-
-
-def all_device_pos(devices):
-	device_pos = []
-	for device in devices:
-		try:
-			lng, lat = device.data_trackingdevice[-1].pos.split(',')
-			label = device.devicename
-			device_pos.append([lng, lat, label])
-		except:
-			pass
-
-	GOOGLEMAPS_KEY = os.environ.get('GOOGLEMAPS_KEY')
-	return device_pos, GOOGLEMAPS_KEY
 
 
 @plots.route('/map')
