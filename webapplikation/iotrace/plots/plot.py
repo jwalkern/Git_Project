@@ -16,8 +16,8 @@ def device_temp(data_trackingdevice):
 	time = []
 	temp = []
 	for item in data_trackingdevice:
-		time.append(item.timestamp.strftime('%d-%m-%Y'))
-		temp.append(item.temp)
+		time.insert(0,item.timestamp.strftime('%d-%m-%Y'))
+		temp.insert(0,item.temp)
 	# Generate plot
 	fig = Figure()
 	axis = fig.add_subplot(1,1,1)
@@ -37,8 +37,8 @@ def device_humid(data_trackingdevice):
 	humid = []
 	# Fetching data
 	for item in data_trackingdevice:
-		time.append(item.timestamp.strftime('%d-%m-%Y'))
-		humid.append(item.humid)
+		time.insert(0,item.timestamp.strftime('%d-%m-%Y'))
+		humid.insert(0,item.humid)
 	# Generate plot
 	fig = Figure()
 	axis = fig.add_subplot(1,1,1)
@@ -58,8 +58,8 @@ def device_hpa(data_trackingdevice):
 	hpa = []
 	# Fetching data
 	for item in data_trackingdevice:
-		time.append(item.timestamp.strftime('%d-%m-%Y'))
-		hpa.append(item.hpa)
+		time.insert(0,item.timestamp.strftime('%d-%m-%Y'))
+		hpa.insert(0,item.hpa)
 	# Generate plot
 	fig = Figure()
 	axis = fig.add_subplot(1,1,1)
@@ -79,8 +79,8 @@ def device_volt(data_trackingdevice):
 	volt = []
 	# Fetching data
 	for item in data_trackingdevice:
-		time.append(item.timestamp.strftime('%d-%m-%Y'))
-		volt.append(item.volt)
+		time.insert(0,item.timestamp.strftime('%d-%m-%Y'))
+		volt.insert(0,item.volt)
 	# Generate plot
 	fig = Figure()
 	axis = fig.add_subplot(1,1,1)
@@ -101,8 +101,8 @@ def device_lte_rssi(data_trackingdevice):
 	lte_rssi = []
 	# Fetching data
 	for item in data_trackingdevice:
-		time.append(item.timestamp.strftime('%d-%m-%Y'))
-		lte_rssi.append(item.lte_rssi)
+		time.insert(0,item.timestamp.strftime('%d-%m-%Y'))
+		lte_rssi.insert(0,item.lte_rssi)
 	# Generate plot
 	fig = Figure()
 	axis = fig.add_subplot(1,1,1)
@@ -117,29 +117,100 @@ def device_lte_rssi(data_trackingdevice):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
+def device_alarm1(data_firedevice):
+	time = []
+	alarm = []
+	# Fetching data
+	for item in data_firedevice:
+		time.insert(0,item.timestamp.strftime('%d-%m-%Y'))
+		alarm.insert(0,item.alarm_1)
+	# Generate plot
+	fig = Figure()
+	axis = fig.add_subplot(1,1,1)
+	axis.set_title("Alarm 1")
+	axis.set_ylabel("True/False")
+	axis.plot(time, alarm)
+	# Convert plot to PNG image
+	pngImage = io.BytesIO()
+	FigureCanvas(fig).print_png(pngImage)
+	# Encode PNG image to base64 string
+	PNG = "data:image/png;base64,"
+	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
+	return PNG
+
+def device_alarm2(data_firedevice):
+	time = []
+	alarm = []
+	# Fetching data
+	for item in data_firedevice:
+		time.insert(0,item.timestamp.strftime('%d-%m-%Y'))
+		alarm.insert(0,item.alarm_2)
+	# Generate plot
+	fig = Figure()
+	axis = fig.add_subplot(1,1,1)
+	axis.set_title("Alarm 2")
+	axis.set_ylabel("True/False")
+	axis.plot(time, alarm)
+	# Convert plot to PNG image
+	pngImage = io.BytesIO()
+	FigureCanvas(fig).print_png(pngImage)
+	# Encode PNG image to base64 string
+	PNG = "data:image/png;base64,"
+	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
+	return PNG 	 
+
 def device_pos(data_trackingdevice):
+	
 	for item in data_trackingdevice:
 		try:
+			
 			Lat = item.pos.split(',')[1].translate({ord(i): None for i in 'NS'})
 			LAT_DD = int(float(Lat)/100)
 			LAT_SS = float(Lat) - LAT_DD * 100
 			LatDec = LAT_DD + LAT_SS/60
+			if item.pos.find("S") != -1:
+				LatDec = LatDec * -1
 
 			Lng = item.pos.split(',')[2].translate({ord(i): None for i in 'EW'})
 			LNG_DD = int(float(Lng)/100)
 			LNG_SS = float(Lng) - LNG_DD * 100
 			LngDec = LNG_DD + LNG_SS/60
+			if item.pos.find("W") != -1:
+				LngDec = LngDec * -1
+			break
 		except:
 			pass
 	pos = f'lat:{LatDec}, lng:{LngDec}'
 	GOOGLEMAPS_KEY =  os.environ.get('GOOGLEMAPS_KEY')	
 	return pos, GOOGLEMAPS_KEY
 
-
 def all_device_pos(devices):
 	device_pos = []
 	for device in devices:
 		if device.devicetype != 'fire':
+			for item in device.data_trackingdevice:
+				if item.pos != None:
+					Lat = item.pos.split(',')[1].translate({ord(i): None for i in 'NS'})
+					LAT_DD = int(float(Lat)/100)
+					LAT_SS = float(Lat) - LAT_DD * 100
+					LatDec = LAT_DD + LAT_SS/60
+					if item.pos.find("S") != -1:
+						LatDec = LatDec * -1
+
+					Lng = item.pos.split(',')[2].translate({ord(i): None for i in 'EW'})
+					LNG_DD = int(float(Lng)/100)
+					LNG_SS = float(Lng) - LNG_DD * 100
+					LngDec = LNG_DD + LNG_SS/60
+					if item.pos.find("W") != -1:
+						LngDec = LngDec * -1
+
+					pos = f'lat:{LatDec}, lng:{LngDec}'
+					label = device.devicename
+					
+					device_pos.append([pos, label])
+					break
+				else:
+					continue
 			try:
 				Lat = device.data_trackingdevice[-1].pos.split(',')[1].translate({ord(i): None for i in 'NS'})
 				LAT_DD = int(float(Lat)/100)
@@ -162,41 +233,3 @@ def all_device_pos(devices):
 	GOOGLEMAPS_KEY = os.environ.get('GOOGLEMAPS_KEY')
 	return device_pos, GOOGLEMAPS_KEY
 
-
-
-
-@plots.route('/plots/plot/<int:device_id>', methods=['GET'])
-@login_required
-def plot1(device_id):
-	device = Device.query.get_or_404(device_id)
-	if device.owner != current_user:
-		abort(403)
-	
-	temp = device_temp(device.data_trackingdevice)
-	humid = device_humid(device.data_trackingdevice)
-	hpa = device_hpa(device.data_trackingdevice)
-	volt = device_volt(device.data_trackingdevice)
-	lte_rssi = device_lte_rssi(device.data_trackingdevice)
-	pos = device_pos(device.data_trackingdevice)
-
-
-	return render_template('plots/plot1.html', temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, pos=pos)
-
-
-@plots.route('/map')
-@login_required
-def mapTest():
-	devices = Device.query.filter_by(user_id=current_user.id)
-	test, GOOGLEMAPS_KEY = all_device_pos(devices)	
-	return render_template('plots/maptest.html', GOOGLEMAPS_KEY=GOOGLEMAPS_KEY, test=test)
-
-@plots.route('/plots/map/<int:device_id>')
-@login_required
-def mapview(device_id):
-	device = Device.query.get_or_404(device_id)
-	if device.owner != current_user:
-		abort(403)
-	pos , GOOGLEMAPS_KEY = device_pos(device.data_trackingdevice)
-
-
-	return render_template('plots/map.html', GOOGLEMAPS_KEY=GOOGLEMAPS_KEY, pos=pos)

@@ -15,16 +15,20 @@
 <div class="container">
     <div class="row">    
         <div class="col">
-            {{device.owner.username}}
+            <p>Owner</p>
+            <p>{{device.owner.username}}</p>
         </div>
         <div class="col">
-            {{device.id}}
+            <p>Device Mac</p>
+            <p>{{device.device_mac}}</p>
         </div>
         <div class="col">
-            {{device.devicename}}
+            <p>Device Name</p>
+            <p>{{device.devicename}}</p>
         </div>
         <div class="col">
-            {{device.devicetype}}
+            <p>Device Type</p>
+            <p>{{device.devicetype}}</p>
         </div>
         <div class="col">
             <a class="btn btn-secondary btn-sm m-1" href="{{ url_for('devices.update_device', device_id=device.id) }}">Edit Device</a>
@@ -33,34 +37,112 @@
     </div>     
 </div>
 
-{% if device.devicetype != "fire" %}
 
-    <div class="container">
-        <div class="row justify-content-md-center">
-            <div class="col-md-auto">
-                <div id="map" style="width:475px;height:400px;"></div>
-            </div>
-            <div class="col-md-auto">
-                <img = src="{{ temp }}" style="width:475px;height:400px;"/>
-            </div>
+{% if device.devicetype != "fire" %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <p>Time Stamp</p>
+            <p>{{ device.data_trackingdevice[0].timestamp }}</p>
         </div>
-        <div class="row justify-content-md-center">
-            <div class="col-md-auto">
-                <img = src="{{ humid }}"style="width:475px;height:400px;"/>
-            </div>
-            <div class="col-md-auto">
-                <img = src="{{ hpa }}"style="width:475px;height:400px;"/>
-            </div>
+        <div class="col">
+            <p>Temp</p>
+            <p>{{ device.data_trackingdevice[0].temp }}</p>
         </div>
-        <div class="row justify-content-md-center">
-            <div class="col-md-auto">
-                <img = src="{{ volt }}"style="width:475px;height:400px;"/>
-            </div>
-            <div class="col-md-auto">
-                <img = src="{{ lte_rssi }}"style="width:475px;height:400px;"/>
-            </div>
+        <div class="col">
+            <p>Humid</p>
+            <p>{{ device.data_trackingdevice[0].humid }}</p>
+        </div>
+        <div class="col">
+            <p>Hpa</p>
+            <p>{{ device.data_trackingdevice[0].hpa }}</p>
+        </div>
+        <div class="col">
+            <p>Volt</p>
+            <p>{{ device.data_trackingdevice[0].volt }}</p>
+        </div>
+        <div class="col">
+            <p>Lte_rssi</p>
+            <p>{{ device.data_trackingdevice[0].lte_rssi }}</p>
         </div>
     </div>
+</div>
+
+
+
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
+            <div id="map" style="width:475px;height:400px;"></div>
+        </div>
+        <div class="col-md-auto">
+            <img = src="{{ temp }}" style="width:475px;height:400px;"/>
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
+            <img = src="{{ humid }}"style="width:475px;height:400px;"/>
+        </div>
+        <div class="col-md-auto">
+            <img = src="{{ hpa }}"style="width:475px;height:400px;"/>
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
+            <img = src="{{ volt }}"style="width:475px;height:400px;"/>
+        </div>
+        <div class="col-md-auto">
+            <img = src="{{ lte_rssi }}"style="width:475px;height:400px;"/>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+{% if device.devicetype == 'fire' %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <p>Time Stamp</p>
+            <p>{{ device.data_firedevice[0].timestamp }}</p>
+        </div>
+        <div class="col">
+            <p>Alarm 1</p>
+            <p>{{ device.data_firedevice[0].alarm_1 }}</p>
+        </div>
+        <div class="col">
+            <p>Alarm 2</p>
+            <p>{{ device.data_firedevice[0].alarm_2 }}</p>
+        </div>
+        <div class="col">
+            <p>Volt</p>
+            <p>{{ device.data_firedevice[0].volt }}</p>
+        </div>
+        <div class="col">
+            <p>Lte_rssi</p>
+            <p>{{ device.data_firedevice[0].lte_rssi }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
+            <img = src="{{ alarm_1 }}"style="width:475px;height:400px;"/>
+        </div>
+        <div class="col-md-auto">
+            <img = src="{{ alarm_2 }}"style="width:475px;height:400px;"/>
+        </div>
+    </div>
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
+            <img = src="{{ volt }}"style="width:475px;height:400px;"/>
+        </div>
+        <div class="col-md-auto">
+            <img = src="{{ lte_rssi }}"style="width:475px;height:400px;"/>
+        </div>
+    </div>
+</div>
 {% endif %}
 
 <!-- Modal -->

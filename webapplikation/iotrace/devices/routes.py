@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from iotrace import db
 from iotrace.models import Device, TrackingDeviceData
 from iotrace.devices.forms import CreateDeviceForm
-from iotrace.plots.plot import device_temp, device_humid, device_hpa, device_volt, device_lte_rssi, device_pos, all_device_pos
+from iotrace.plots.plot import device_temp, device_humid, device_hpa, device_volt, device_lte_rssi, device_pos, all_device_pos, device_alarm1, device_alarm2
 
 devices = Blueprint('devices', __name__)
 
@@ -14,7 +14,7 @@ devices = Blueprint('devices', __name__)
 def dashboard():
     devices = Device.query.filter_by(user_id=current_user.id)
     all_device, GOOGLEMAPS_KEY = all_device_pos(devices)
-    return render_template('devices/dashboard.html', title='Dashboard', devices=devices, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY, all_device=all_device)
+    return render_template('devices/dashboard.html',  title='Dashboard', devices=devices, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY, all_device=all_device)
 
 
 @devices.route('/dashboard/device/data/<device_id>')
@@ -29,10 +29,14 @@ def device(device_id):
         hpa = device_hpa(device.data_trackingdevice)
         volt = device_volt(device.data_trackingdevice)
         lte_rssi = device_lte_rssi(device.data_trackingdevice)
-        pos, GOOGLEMAPS_KEY = device_pos(device.data_trackingdevice)
+        pos, GOOGLEMAPS_KEY= device_pos(device.data_trackingdevice)
+        return render_template('devices/device.html', title=device.devicename, device=device, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, pos=pos, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY)
     elif device.devicetype == 'fire':
-        pass
-    return render_template('devices/device.html', title=device.devicename, device=device, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, pos=pos, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY)
+        alarm_1 = device_alarm1(device.data_firedevice)
+        alarm_2 = device_alarm2(device.data_firedevice)
+        volt = device_volt(device.data_firedevice)
+        lte_rssi = device_lte_rssi(device.data_firedevice)       
+        return render_template('devices/device.html', title=device.devicename, device=device, alarm_1=alarm_1, alarm_2=alarm_2, volt=volt, lte_rssi=lte_rssi)
 
 @devices.route('/dashboard/device/edit/<device_id>', methods=['GET', 'POST'])
 @login_required
