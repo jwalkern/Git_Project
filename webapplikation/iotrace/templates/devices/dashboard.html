@@ -6,77 +6,69 @@
 <legend class="border-bottom mb-4">Dashboard</legend>
 <div class="container">
     {% for device in devices %}
-    <a href="{{ url_for('devices.device', device_id=device.id) }}">
-    <div class="row" style="border:1px solid #89ca84;">    
-        <div class="col">
-            <p>{{device.owner.username}}</p>
-        </div>
-        <div class="col">
-            <p>{{device.id}}</p>
-        </div>
-        <div class="col">
-            <p>{{device.device_mac}}</p>
-        </div>
-        <div class="col">
-            <p>{{device.devicename}}</p>
-        </div>
-        <div class="col">
-            <p>{{device.devicetype}}</p>
-        </div>     
-    </div>
-    {% if device.devicetype != 'fire' %}
-    <div class="row">
-        <div class="col">
-            <p>Time Stamp</p>
-            <p>{{ device.data_trackingdevice[0].timestamp }}</p>
-        </div>
-        <div class="col">
-            <p>Temp</p>
-            <p>{{ device.data_trackingdevice[0].temp }}</p>
-        </div>
-        <div class="col">
-            <p>Humid</p>
-            <p>{{ device.data_trackingdevice[0].humid }}</p>
-        </div>
-        <div class="col">
-            <p>Hpa</p>
-            <p>{{ device.data_trackingdevice[0].hpa }}</p>
-        </div><div class="col">
-            <p>Volt</p>
-            <p>{{ device.data_trackingdevice[0].volt }}</p>
-        </div><div class="col">
-            <p>Lte_rssi</p>
-            <p>{{ device.data_trackingdevice[0].lte_rssi }}</p>
-        </div>
-    </div>
-    {% endif %}
+        {% if device.devicetype != 'fire' and device.data_trackingdevice|length > 0  %}
+            <div class="row" style="border:1px solid #89ca84;">    
+                <div class="col">
+                    <a href="{{ url_for('devices.device', device_id=device.id) }}">{{device.device_mac}}</a>
+                </div>
 
-    {% if device.devicetype == 'fire' %}
-    <div class="row">
-        <div class="col">
-            <p>Time Stamp</p>
-            <p>{{ device.data_firedevice[0].timestamp }}</p>
-        </div>
-        <div class="col">
-            <p>alarm_1</p>
-            <p>{{ device.data_firedevice[0].alarm_1 }}</p>
-        </div>
-        <div class="col">
-            <p>alarm_2</p>
-            <p>{{ device.data_firedevice[0].alarm_2 }}</p>
-        </div>
-        <div class="col">
-            <p>Volt</p>
-            <p>{{ device.data_firedevice[0].volt }}</p>
-        </div><div class="col">
-            <p>Lte_rssi</p>
-            <p>{{ device.data_firedevice[0].lte_rssi }}</p>
-        </div>
-    </div>
-    {% endif %}
+                <div class="col">
+                    <p>{{device.devicename}}</p>
+                </div>   
+                <div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/date.png') }}" alt="" width=20px height=20px >
+                    {{ device.data_trackingdevice[0].timestamp.strftime('%d-%m-%Y')}}
+                </div>
+                <div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/temp.png') }}" alt="" width=20px height=20px >
+                    {{ device.data_trackingdevice[0].temp }}
+                </div>
+                <div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/humid.png') }}" alt="" width=20px height=20px >
+                    {{ device.data_trackingdevice[0].humid }}
+                </div>
+                <div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/hpa.png') }}" alt="" width=20px height=20px >
+                    {{ device.data_trackingdevice[0].hpa }}
+                </div><div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/volt.png') }}" alt="" width=20px height=20px >
+                    {{ device.data_trackingdevice[0].volt }}
+                </div><div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/wifi.png') }}" alt="" width=20px height=20px >
+                    {{ device.data_trackingdevice[0].lte_rssi }}
+                </div>
+            </div>
+        {% endif %}
 
-
-    </a>
+        {% if device.devicetype == 'fire' and device.data_firedevice|length > 0 %}         
+            <div class="row" style="border:1px solid #89ca84;">    
+                <div class="col">
+                    <a href="{{ url_for('devices.device', device_id=device.id) }}">{{device.device_mac}}</a>
+                </div>
+                <div class="col">
+                    <p>{{device.devicename}}</p>
+                </div>   
+                <div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/date.png') }}" alt="" width=20px height=20px >
+                    {{ device.data_firedevice[0].timestamp.strftime('%d-%m-%Y') }}
+                </div>
+                <div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/alarm.png') }}" alt="" width=20px height=20px >
+                    {{ device.data_firedevice[0].alarm_1 }}
+                </div>
+                <div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/alarm.png') }}" alt="" width=20px height=20px >
+                    {{ device.data_firedevice[0].alarm_2 }}
+                </div>
+                <div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/volt.png') }}" alt="" width=20px height=20px >
+                    {{ device.data_firedevice[0].volt }}
+                </div><div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/wifi.png') }}" alt="" width=20px height=20px >
+                    {{ device.data_firedevice[0].lte_rssi }}
+                </div>
+            </div>
+        {% endif %}
     {% endfor %}
 </div>
 
@@ -93,6 +85,7 @@
         var marker = new google.maps.Marker({
             position: { {{device[0]}} },
             map: map,
+            icon: "{{ device[2] }}",
             label: "{{ device[1] }}"
         });
         {% endfor %}

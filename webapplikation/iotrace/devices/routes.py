@@ -12,7 +12,7 @@ devices = Blueprint('devices', __name__)
 @devices.route('/dashboard')
 @login_required
 def dashboard():
-    devices = Device.query.filter_by(user_id=current_user.id)
+    devices = Device.query.filter_by(user_id=current_user.id).order_by(Device.devicetype.desc())
     all_device, GOOGLEMAPS_KEY = all_device_pos(devices)
     return render_template('devices/dashboard.html',  title='Dashboard', devices=devices, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY, all_device=all_device)
 
@@ -29,8 +29,8 @@ def device(device_id):
         hpa = device_hpa(device.data_trackingdevice)
         volt = device_volt(device.data_trackingdevice)
         lte_rssi = device_lte_rssi(device.data_trackingdevice)
-        pos, GOOGLEMAPS_KEY= device_pos(device.data_trackingdevice)
-        return render_template('devices/device.html', title=device.devicename, device=device, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, pos=pos, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY)
+        pos, label, icon,  GOOGLEMAPS_KEY= device_pos(device)
+        return render_template('devices/device.html', title=device.devicename, device=device, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, pos=pos, icon=icon, label=label, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY)
     elif device.devicetype == 'fire':
         alarm_1 = device_alarm1(device.data_firedevice)
         alarm_2 = device_alarm2(device.data_firedevice)

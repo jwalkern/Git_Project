@@ -38,7 +38,7 @@
 </div>
 
 
-{% if device.devicetype != "fire" %}
+{% if device.devicetype != "fire" and device.data_trackingdevice|length > 0 %}
 <div class="container">
     <div class="row">
         <div class="col">
@@ -99,7 +99,7 @@
 {% endif %}
 
 
-{% if device.devicetype == 'fire' %}
+{% if device.devicetype == 'fire' and device.data_firedevice|length > 0 %}
 <div class="container">
     <div class="row">
         <div class="col">
@@ -176,7 +176,9 @@
         });
         var marker = new google.maps.Marker({
             position: location,
-            map: map
+            map: map,
+            icon: "{{ icon }}",
+            label: " {{ label }} "
         });
     }
 

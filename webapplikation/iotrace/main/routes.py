@@ -34,7 +34,7 @@ def dummy():
     if form.validate_on_submit():
         device = Device.query.filter_by(device_mac=form.device_mac.data).first()
         if form.devicetype.data != 'fire':
-            with open("D:/Git_projects/iotrace/datadump/D083D4003ADD.txt") as obj:
+            with open("D:/Git_projects/iotrace/datadump/Xtel16.txt") as obj:
                 file = obj.read()
             js = json.loads(file)
             for item in js:
@@ -52,7 +52,7 @@ def dummy():
             db.session.commit()
             flash('Data generated!', 'success')
         elif form.devicetype.data == 'fire':
-            with open("D:/Git_projects/iotrace/datadump/D083D4003F80.txt") as obj:
+            with open("D:/Git_projects/iotrace/datadump/brandalarm1.txt") as obj:
                 file = obj.read()
             js = json.loads(file)
             for item in js:

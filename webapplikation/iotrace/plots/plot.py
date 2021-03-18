@@ -159,11 +159,14 @@ def device_alarm2(data_firedevice):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG 	 
 
-def device_pos(data_trackingdevice):
-	
-	for item in data_trackingdevice:
-		try:
-			
+def device_pos(device):
+	LatDec = ''
+	LngDec = ''
+	count = 0
+	label = device.devicename
+	icon = "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+	for item in device.data_trackingdevice:
+		if item.pos != '':
 			Lat = item.pos.split(',')[1].translate({ord(i): None for i in 'NS'})
 			LAT_DD = int(float(Lat)/100)
 			LAT_SS = float(Lat) - LAT_DD * 100
@@ -177,19 +180,26 @@ def device_pos(data_trackingdevice):
 			LngDec = LNG_DD + LNG_SS/60
 			if item.pos.find("W") != -1:
 				LngDec = LngDec * -1
+			if count > 10:
+				icon = "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+				label = item.timestamp.strftime('%d-%m-%Y')
+
 			break
-		except:
-			pass
+		else:
+			count = count + 1
+
 	pos = f'lat:{LatDec}, lng:{LngDec}'
 	GOOGLEMAPS_KEY =  os.environ.get('GOOGLEMAPS_KEY')	
-	return pos, GOOGLEMAPS_KEY
+	return pos, label, icon, GOOGLEMAPS_KEY
 
 def all_device_pos(devices):
 	device_pos = []
 	for device in devices:
+		count = 0
+		icon = "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
 		if device.devicetype != 'fire':
 			for item in device.data_trackingdevice:
-				if item.pos != None:
+				if item.pos != '':
 					Lat = item.pos.split(',')[1].translate({ord(i): None for i in 'NS'})
 					LAT_DD = int(float(Lat)/100)
 					LAT_SS = float(Lat) - LAT_DD * 100
@@ -206,28 +216,14 @@ def all_device_pos(devices):
 
 					pos = f'lat:{LatDec}, lng:{LngDec}'
 					label = device.devicename
-					
-					device_pos.append([pos, label])
+					if count > 10:
+						icon = "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+						label = item.timestamp.strftime('%d-%m-%Y')
+
+					device_pos.append([pos, label, icon])
 					break
 				else:
-					continue
-			try:
-				Lat = device.data_trackingdevice[-1].pos.split(',')[1].translate({ord(i): None for i in 'NS'})
-				LAT_DD = int(float(Lat)/100)
-				LAT_SS = float(Lat) - LAT_DD * 100
-				LatDec = LAT_DD + LAT_SS/60
-
-				Lng = device.data_trackingdevice[-1].pos.split(',')[2].translate({ord(i): None for i in 'EW'})
-				LNG_DD = int(float(Lng)/100)
-				LNG_SS = float(Lng) - LNG_DD * 100
-				LngDec = LNG_DD + LNG_SS/60
-
-				pos = f'lat:{LatDec}, lng:{LngDec}'
-				label = device.devicename
-				
-				device_pos.append([pos, label])
-			except:
-				continue
+					count = count + 1
 		else:
 			continue
 	GOOGLEMAPS_KEY = os.environ.get('GOOGLEMAPS_KEY')
