@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+{% set active_page = "dashboard" %}
+
+{% block content %}
+
+
+<legend class="border-bottom mb-4">Dashboard</legend>
+<div class="container">
+    {% for device in devices %}
+        {% if device.devicetype != 'fire' %}
+            {% for key in device_data %}
+                {% if key == device.device_mac and device_data[key]|length > 0 %}
+                    <div class="row" style="border:1px solid #89ca84;">    
+                        <div class="col">
+                            <a href="{{ url_for('devices.device', device_id=device.id) }}">{{device.device_mac}}</a>
+                        </div>
+
+                        <div class="col">
+                            <p>{{device.devicename}}</p>
+                        </div>   
+                        <div class="col">
+                            <img src="{{ url_for('static', filename='images/icon/date.png') }}" alt="" width=20px height=20px >
+                            {{ device_data[key][0]['ts']}}
+                        </div>
+                        <div class="col">
+                            <img src="{{ url_for('static', filename='images/icon/temp.png') }}" alt="" width=20px height=20px >
+                            {{ device_data[key][0]['data']['temp'] }}
+                        </div>
+                        <div class="col">
+                            <img src="{{ url_for('static', filename='images/icon/humid.png') }}" alt="" width=20px height=20px >
+                            {{ device_data[key][0]['data']['humid'] }}
+                        </div>
+                        <div class="col">
+                            <img src="{{ url_for('static', filename='images/icon/hpa.png') }}" alt="" width=20px height=20px >
+                            {{ device_data[key][0]['data']['hpa'] }}
+                        </div><div class="col">
+                            <img src="{{ url_for('static', filename='images/icon/volt.png') }}" alt="" width=20px height=20px >
+                            {{ device_data[key][0]['data']['volt'] }}
+                        </div><div class="col">
+                            <img src="{{ url_for('static', filename='images/icon/wifi.png') }}" alt="" width=20px height=20px >
+                            {{ device_data[key][0]['data']['lte_rssi'] }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if device.devicetype == 'fire' %}
+            {% for key in device_data %}
+                {% if key == device.device_mac and device_data[key]|length > 0 %}        
+                    <div class="row" style="border:1px solid #89ca84;">    
+                        <div class="col">
+                            <a href="{{ url_for('devices.device', device_id=device.id) }}">{{device.device_mac}}</a>
+                        </div>
+                        <div class="col">
+                            <p>{{device.devicename}}</p>
+                        </div>   
+                        <div class="col">
+                            <img src="{{ url_for('static', filename='images/icon/date.png') }}" alt="" width=20px height=20px >
+                            {{ device_data[key][0]['ts']}}
+                        </div>
+                        <div class="col">
+                            <img src="{{ url_for('static', filename='images/icon/alarm.png') }}" alt="" width=20px height=20px >
+                            {{ device_data[key][0]['data']['alarm_1'] }}
+                            {{ device.data_firedevice[0].alarm_1 }}
+                        </div>
+                        <div class="col">
+                            <img src="{{ url_for('static', filename='images/icon/alarm.png') }}" alt="" width=20px height=20px >
+                            {{ device_data[key][0]['data']['alarm_2'] }}
+                            {{ device.data_firedevice[0].alarm_2 }}
+                        </div>
+                        <div class="col">
+                            <img src="{{ url_for('static', filename='images/icon/volt.png') }}" alt="" width=20px height=20px >
+                            {{ device_data[key][0]['data']['volt'] }}
+                            {{ device.data_firedevice[0].volt }}
+                        </div><div class="col">
+                            <img src="{{ url_for('static', filename='images/icon/wifi.png') }}" alt="" width=20px height=20px >
+                            {{ device_data[key][0]['data']['lte_rssi'] }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+</div>
+
+<div id="map" style="width:100%;height:500px;"></div>
+
+<script>
+    function initMap() {
+        var location = { lat: 0, lng: 0 };
+        var map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 1,
+            center: location
+        });
+        {% for device in all_device %}
+        var marker = new google.maps.Marker({
+            position: { {{device[0]}} },
+            map: map,
+            icon: "{{ device[2] }}",
+            label: "{{ device[1] }}"
+        });
+        {% endfor %}
+    }
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}&callback=initMap"></script>
+
+
+
+
+
+{% endblock content %}
