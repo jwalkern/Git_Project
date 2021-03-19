@@ -5,8 +5,17 @@ from iotrace import db
 from iotrace.models import Device, TrackingDeviceData
 from iotrace.devices.forms import CreateDeviceForm
 from iotrace.plots.plot import device_temp, device_humid, device_hpa, device_volt, device_lte_rssi, device_pos, all_device_pos, device_alarm1, device_alarm2
+from iotrace.curls.curl import curl_all_device_data
 
 devices = Blueprint('devices', __name__)
+
+@devices.route('/NEWdashboard')
+@login_required
+def NEWdashboard():
+    devices = Device.query.filter_by(user_id=current_user.id).order_by(Device.devicetype.desc())
+    all_device, GOOGLEMAPS_KEY = curl_all_device_data(devices)
+    return render_template('devices/dashboard.html',  title='Dashboard', devices=devices, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY, all_device=all_device)
+
 
 
 @devices.route('/dashboard')

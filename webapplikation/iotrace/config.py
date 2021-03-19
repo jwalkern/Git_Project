@@ -9,3 +9,4 @@ class Config:
    MAIL_USE_TLS = True
    MAIL_USERNAME = os.environ.get('G_MAIL')
    MAIL_PASSWORD = os.environ.get('G_PASS')
+   XTEL_TOKEN = os.environ.get('XTEL_TOKEN')

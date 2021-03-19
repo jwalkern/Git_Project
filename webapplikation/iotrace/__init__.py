@@ -35,12 +35,14 @@ def create_app(config_class=Config):
     from iotrace.main.routes import main
     from iotrace.errors.handlers import errors
     from iotrace.plots.plot import plots
+    from iotrace.curls.curl import curls
     
     app.register_blueprint(accounts)
     app.register_blueprint(devices)
     app.register_blueprint(main)
     app.register_blueprint(errors)
     app.register_blueprint(plots)
+    app.register_blueprint(curls)
     
     return app
     
