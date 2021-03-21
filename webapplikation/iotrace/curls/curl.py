@@ -12,7 +12,7 @@ from flask_googlemaps import Map
 
 curls = Blueprint('curls', __name__)
 
-def get_data(device_mac):
+def curl_get_data(device_mac):
 	url = 'https://cloud.moviot.dk/web/logs/' + device_mac
 	myToken = os.environ.get('XTEL_TOKEN')
 	head = {"Authorization":"Token {}".format(myToken)}
@@ -24,12 +24,22 @@ def get_data(device_mac):
 	res = json.loads(single_sting)
 	return res
 
-def device_temp(data_trackingdevice):
+def curl_device_data(device):
+	device_data = {}
+	mac_addr = str(device.device_mac)
+	obj = curl_get_data(mac_addr)
+	device_data[mac_addr] = obj
+	return device_data
+
+
+def curl_device_temp(device):
+	mac_addr = str(device.device_mac)
+	obj = curl_get_data(mac_addr)
 	time = []
 	temp = []
-	for item in data_trackingdevice:
-		time.insert(0,item.timestamp.strftime('%d-%m-%Y'))
-		temp.insert(0,item.temp)
+	for item in obj:
+		time.insert(0,item['ts'])
+		temp.insert(0,item['data']['temp'])
 	# Generate plot
 	fig = Figure()
 	axis = fig.add_subplot(1,1,1)
@@ -44,13 +54,15 @@ def device_temp(data_trackingdevice):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def device_humid(data_trackingdevice):
+def curl_device_humid(device):
+	mac_addr = str(device.device_mac)
+	obj = curl_get_data(mac_addr)
 	time = []
 	humid = []
 	# Fetching data
-	for item in data_trackingdevice:
-		time.insert(0,item.timestamp.strftime('%d-%m-%Y'))
-		humid.insert(0,item.humid)
+	for item in obj:
+		time.insert(0,item['ts'])
+		humid.insert(0,item['data']['humid'])
 	# Generate plot
 	fig = Figure()
 	axis = fig.add_subplot(1,1,1)
@@ -65,13 +77,15 @@ def device_humid(data_trackingdevice):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def device_hpa(data_trackingdevice):
+def curl_device_hpa(device):
+	mac_addr = str(device.device_mac)
+	obj = curl_get_data(mac_addr)
 	time = []
 	hpa = []
 	# Fetching data
-	for item in data_trackingdevice:
-		time.insert(0,item.timestamp.strftime('%d-%m-%Y'))
-		hpa.insert(0,item.hpa)
+	for item in obj:
+		time.insert(0,item['ts'])
+		hpa.insert(0,item['data']['hpa'])
 	# Generate plot
 	fig = Figure()
 	axis = fig.add_subplot(1,1,1)
@@ -86,13 +100,15 @@ def device_hpa(data_trackingdevice):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def device_volt(data_trackingdevice):
+def curl_device_volt(device):
+	mac_addr = str(device.device_mac)
+	obj = curl_get_data(mac_addr)
 	time = []
 	volt = []
 	# Fetching data
-	for item in data_trackingdevice:
-		time.insert(0,item.timestamp.strftime('%d-%m-%Y'))
-		volt.insert(0,item.volt)
+	for item in obj:
+		time.insert(0,item['ts'])
+		volt.insert(0,item['data']['volt'])
 	# Generate plot
 	fig = Figure()
 	axis = fig.add_subplot(1,1,1)
@@ -108,13 +124,15 @@ def device_volt(data_trackingdevice):
 	return PNG
 
 
-def device_lte_rssi(data_trackingdevice):
+def curl_device_lte_rssi(device):
+	mac_addr = str(device.device_mac)
+	obj = curl_get_data(mac_addr)
 	time = []
 	lte_rssi = []
 	# Fetching data
-	for item in data_trackingdevice:
-		time.insert(0,item.timestamp.strftime('%d-%m-%Y'))
-		lte_rssi.insert(0,item.lte_rssi)
+	for item in obj:
+		time.insert(0,item['ts'])
+		lte_rssi.insert(0,item['data']['lte_rssi'])
 	# Generate plot
 	fig = Figure()
 	axis = fig.add_subplot(1,1,1)
@@ -129,13 +147,15 @@ def device_lte_rssi(data_trackingdevice):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def device_alarm1(data_firedevice):
+def curl_device_alarm1(device):
+	mac_addr = str(device.device_mac)
+	obj = curl_get_data(mac_addr)
 	time = []
 	alarm = []
 	# Fetching data
-	for item in data_firedevice:
-		time.insert(0,item.timestamp.strftime('%d-%m-%Y'))
-		alarm.insert(0,item.alarm_1)
+	for item in obj:
+		time.insert(0,item['ts'])
+		alarm.insert(0,item['data']['alarm_1'])
 	# Generate plot
 	fig = Figure()
 	axis = fig.add_subplot(1,1,1)
@@ -150,13 +170,15 @@ def device_alarm1(data_firedevice):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def device_alarm2(data_firedevice):
+def curl_device_alarm2(device):
+	mac_addr = str(device.device_mac)
+	obj = curl_get_data(mac_addr)
 	time = []
 	alarm = []
 	# Fetching data
-	for item in data_firedevice:
-		time.insert(0,item.timestamp.strftime('%d-%m-%Y'))
-		alarm.insert(0,item.alarm_2)
+	for item in obj:
+		time.insert(0,item['ts'])
+		alarm.insert(0,item['data']['alarm_2'])
 	# Generate plot
 	fig = Figure()
 	axis = fig.add_subplot(1,1,1)
@@ -171,30 +193,32 @@ def device_alarm2(data_firedevice):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG 	 
 
-def device_pos(device):
+def curl_device_pos(device):
+	mac_addr = str(device.device_mac)
+	obj = curl_get_data(mac_addr)
 	LatDec = ''
 	LngDec = ''
 	count = 0
 	label = device.devicename
 	icon = "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
-	for item in device.data_trackingdevice:
-		if item.pos != '':
-			Lat = item.pos.split(',')[1].translate({ord(i): None for i in 'NS'})
+	for item in obj:
+		if item['data']['pos'] != '':
+			Lat = item['data']['pos'].split(',')[1].translate({ord(i): None for i in 'NS'})
 			LAT_DD = int(float(Lat)/100)
 			LAT_SS = float(Lat) - LAT_DD * 100
 			LatDec = LAT_DD + LAT_SS/60
-			if item.pos.find("S") != -1:
+			if item['data']['pos'].find("S") != -1:
 				LatDec = LatDec * -1
 
-			Lng = item.pos.split(',')[2].translate({ord(i): None for i in 'EW'})
+			Lng = item['data']['pos'].split(',')[2].translate({ord(i): None for i in 'EW'})
 			LNG_DD = int(float(Lng)/100)
 			LNG_SS = float(Lng) - LNG_DD * 100
 			LngDec = LNG_DD + LNG_SS/60
-			if item.pos.find("W") != -1:
+			if item['data']['pos'].find("W") != -1:
 				LngDec = LngDec * -1
 			if count > 10:
 				icon = "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
-				label = item.timestamp.strftime('%d-%m-%Y')
+				label = item['ts']
 
 			break
 		else:
@@ -206,12 +230,12 @@ def device_pos(device):
 
 
 
-def curl_all_device_data(devices):
+def curl_all_device_pos(devices):
 	device_pos = []
 	device_data = {}
 	for device in devices:
 		mac_addr = str(device.device_mac)
-		obj = get_data(mac_addr)
+		obj = curl_get_data(mac_addr)
 		device_data[mac_addr] = obj
 		count = 0
 		icon = "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
@@ -236,7 +260,7 @@ def curl_all_device_data(devices):
 					label = device.devicename
 					if count > 10:
 						icon = "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
-						label = item.timestamp.strftime('%d-%m-%Y')
+						label = item['ts']
 
 					device_pos.append([pos, label, icon])
 					break

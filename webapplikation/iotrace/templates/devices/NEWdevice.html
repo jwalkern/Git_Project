@@ -1,0 +1,214 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<legend class="border-bottom mb-4">Device Data</legend>
+<div class="container">
+    <div class="row justify-content-md-center">
+        {%for i in current_user.devices %}
+        <div class="col-sm-auto">
+            <a href="{{ url_for('devices.device', device_id=i.id) }}" class="btn btn-outline-success">{{loop.index}}</a>
+        </div>       
+        {%endfor%}
+    </div>
+</div>
+
+
+
+<div class="container">
+    <div class="row">    
+        <div class="col">
+            <p>Owner</p>
+            <p>{{device.owner.username}}</p>
+        </div>
+        <div class="col">
+            <p>Device Mac</p>
+            <p>{{device.device_mac}}</p>
+        </div>
+        <div class="col">
+            <p>Device Name</p>
+            <p>{{device.devicename}}</p>
+        </div>
+        <div class="col">
+            <p>Device Type</p>
+            <p>{{device.devicetype}}</p>
+        </div>
+        <div class="col">
+            <a class="btn btn-secondary btn-sm m-1" href="{{ url_for('devices.update_device', device_id=device.id) }}">Edit Device</a>
+            <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+        </div>       
+    </div>     
+</div>
+
+
+
+{% if device.devicetype != 'fire' %}
+    <div class="container">
+        <div class="row" style="border:1px solid #89ca84;">    
+            <div class="col">
+                <p>{{device.device_mac}}</p>
+            </div>
+            <div class="col">
+                <p>{{device.devicename}}</p>
+            </div>  
+            {% for key in device_data %}
+                {% if key == device.device_mac and device_data[key]|length > 0 %}
+     
+                <div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/date.png') }}" alt="" width=20px height=20px >
+                    {{ device_data[key][0]['ts']}}
+                </div>
+                <div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/temp.png') }}" alt="" width=20px height=20px >
+                    {{ device_data[key][0]['data']['temp'] }}
+                </div>
+                <div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/humid.png') }}" alt="" width=20px height=20px >
+                    {{ device_data[key][0]['data']['humid'] }}
+                </div>
+                <div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/hpa.png') }}" alt="" width=20px height=20px >
+                    {{ device_data[key][0]['data']['hpa'] }}
+                </div><div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/volt.png') }}" alt="" width=20px height=20px >
+                    {{ device_data[key][0]['data']['volt'] }}
+                </div><div class="col">
+                    <img src="{{ url_for('static', filename='images/icon/wifi.png') }}" alt="" width=20px height=20px >
+                    {{ device_data[key][0]['data']['lte_rssi'] }}
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <div id="map" style="width:475px;height:400px;"></div>
+            </div>
+            <div class="col-md-auto">
+                <img = src="{{ temp }}" style="width:475px;height:400px;"/>
+            </div>
+        </div>
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <img = src="{{ humid }}"style="width:475px;height:400px;"/>
+            </div>
+            <div class="col-md-auto">
+                <img = src="{{ hpa }}"style="width:475px;height:400px;"/>
+            </div>
+        </div>
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <img = src="{{ volt }}"style="width:475px;height:400px;"/>
+            </div>
+            <div class="col-md-auto">
+                <img = src="{{ lte_rssi }}"style="width:475px;height:400px;"/>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+
+{% if device.devicetype == 'fire' %}
+    <div class="container">
+        <div class="row" style="border:1px solid #89ca84;">    
+            <div class="col">
+                <p>{{device.device_mac}}</p>
+            </div>
+            <div class="col">
+                <p>{{device.devicename}}</p>
+            </div> 
+
+            {% for key in device_data %}
+                {% if key == device.device_mac and device_data[key]|length > 0 %}             
+                    <div class="col">
+                        <img src="{{ url_for('static', filename='images/icon/date.png') }}" alt="" width=20px height=20px >
+                        {{ device_data[key][0]['ts']}}
+                    </div>
+                    <div class="col">
+                        <img src="{{ url_for('static', filename='images/icon/alarm.png') }}" alt="" width=20px height=20px >
+                        {{ device_data[key][0]['data']['alarm_1'] }}
+                    </div>
+                    <div class="col">
+                        <img src="{{ url_for('static', filename='images/icon/alarm.png') }}" alt="" width=20px height=20px >
+                        {{ device_data[key][0]['data']['alarm_2'] }}
+                    </div>
+                    <div class="col">
+                        <img src="{{ url_for('static', filename='images/icon/volt.png') }}" alt="" width=20px height=20px >
+                        {{ device_data[key][0]['data']['volt'] }}
+                    </div><div class="col">
+                        <img src="{{ url_for('static', filename='images/icon/wifi.png') }}" alt="" width=20px height=20px >
+                        {{ device_data[key][0]['data']['lte_rssi'] }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+                
+
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <img = src="{{ alarm_1 }}"style="width:475px;height:400px;"/>
+            </div>
+            <div class="col-md-auto">
+                <img = src="{{ alarm_2 }}"style="width:475px;height:400px;"/>
+            </div>
+        </div>
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <img = src="{{ volt }}"style="width:475px;height:400px;"/>
+            </div>
+            <div class="col-md-auto">
+                <img = src="{{ lte_rssi }}"style="width:475px;height:400px;"/>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete Device?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are your sure that you would like to delete the device?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <form action="{{url_for('devices.delete_device', device_id=device.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="delete">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+    function initMap() {
+        var location = { {{ pos}} };
+        var map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 10,
+            center: location
+        });
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map,
+            icon: "{{ icon }}",
+            label: " {{ label }} "
+        });
+    }
+
+
+
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLEMAPS_KEY}}&callback=initMap"></script>
+
+{% endblock content %}

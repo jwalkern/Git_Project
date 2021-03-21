@@ -5,7 +5,7 @@ from iotrace import db
 from iotrace.models import Device, TrackingDeviceData
 from iotrace.devices.forms import CreateDeviceForm
 from iotrace.plots.plot import device_temp, device_humid, device_hpa, device_volt, device_lte_rssi, device_pos, all_device_pos, device_alarm1, device_alarm2
-from iotrace.curls.curl import curl_all_device_data
+from iotrace.curls.curl import curl_all_device_pos, curl_device_data, curl_device_temp, curl_device_humid, curl_device_hpa, curl_device_volt, curl_device_lte_rssi, curl_device_pos, curl_device_alarm1, curl_device_alarm2
 
 devices = Blueprint('devices', __name__)
 
@@ -13,7 +13,7 @@ devices = Blueprint('devices', __name__)
 @login_required
 def curl_dashboard():
     devices = Device.query.filter_by(user_id=current_user.id).order_by(Device.devicetype.desc())
-    device_data, all_device, GOOGLEMAPS_KEY = curl_all_device_data(devices)
+    device_data, all_device, GOOGLEMAPS_KEY = curl_all_device_pos(devices)
     return render_template('devices/NEWdashboard.html',  title='Dashboard', devices=devices, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY, all_device=all_device, device_data=device_data)
 
 @devices.route('/NEWdashboard/device/data/<device_id>')
@@ -22,20 +22,21 @@ def curl_device(device_id):
     device = Device.query.get_or_404(device_id)
     if current_user != device.owner:
         abort(403)
+    device_data = curl_device_data(device)
     if device.devicetype != 'fire':
-        temp = device_temp(device)
-        humid = device_humid(device)
-        hpa = device_hpa(device)
-        volt = device_volt(device)
-        lte_rssi = device_lte_rssi(device)
-        pos, label, icon,  GOOGLEMAPS_KEY= device_pos(device)
-        return render_template('devices/device.html', title=device.devicename, device=device, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, pos=pos, icon=icon, label=label, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY)
+        temp = curl_device_temp(device)
+        humid = curl_device_humid(device)
+        hpa = curl_device_hpa(device)
+        volt = curl_device_volt(device)
+        lte_rssi = curl_device_lte_rssi(device)
+        pos, label, icon,  GOOGLEMAPS_KEY= curl_device_pos(device)
+        return render_template('devices/NEWdevice.html', title=device.devicename, device=device, device_data=device_data, temp=temp, humid=humid, hpa=hpa, volt=volt, lte_rssi=lte_rssi, pos=pos, icon=icon, label=label, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY)
     elif device.devicetype == 'fire':
-        alarm_1 = device_alarm1(device)
-        alarm_2 = device_alarm2(device)
-        volt = device_volt(device)
-        lte_rssi = device_lte_rssi(device)       
-        return render_template('devices/device.html', title=device.devicename, device=device, alarm_1=alarm_1, alarm_2=alarm_2, volt=volt, lte_rssi=lte_rssi)
+        alarm_1 = curl_device_alarm1(device)
+        alarm_2 = curl_device_alarm2(device)
+        volt = curl_device_volt(device)
+        lte_rssi = curl_device_lte_rssi(device)       
+        return render_template('devices/NEWdevice.html', title=device.devicename, device=device, device_data=device_data, alarm_1=alarm_1, alarm_2=alarm_2, volt=volt, lte_rssi=lte_rssi)
 
 
 

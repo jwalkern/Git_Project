@@ -62,17 +62,14 @@
                         <div class="col">
                             <img src="{{ url_for('static', filename='images/icon/alarm.png') }}" alt="" width=20px height=20px >
                             {{ device_data[key][0]['data']['alarm_1'] }}
-                            {{ device.data_firedevice[0].alarm_1 }}
                         </div>
                         <div class="col">
                             <img src="{{ url_for('static', filename='images/icon/alarm.png') }}" alt="" width=20px height=20px >
                             {{ device_data[key][0]['data']['alarm_2'] }}
-                            {{ device.data_firedevice[0].alarm_2 }}
                         </div>
                         <div class="col">
                             <img src="{{ url_for('static', filename='images/icon/volt.png') }}" alt="" width=20px height=20px >
                             {{ device_data[key][0]['data']['volt'] }}
-                            {{ device.data_firedevice[0].volt }}
                         </div><div class="col">
                             <img src="{{ url_for('static', filename='images/icon/wifi.png') }}" alt="" width=20px height=20px >
                             {{ device_data[key][0]['data']['lte_rssi'] }}
