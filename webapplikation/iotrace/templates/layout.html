@@ -41,10 +41,10 @@
                             </li>
                             {% if current_user.is_authenticated %}
                             <li class="nav-item">                                                      
-                                <a class="nav-link" href="{{ url_for('devices.dashboard') }}">Dashboard</a>
+                                <a class="nav-link" href="{{ url_for('devices.curl_dashboard') }}">Dashboard</a>
                             </li>
                             <li class="nav-item">                                                      
-                                <a class="nav-link" href="{{ url_for('devices.device', device_id=current_user.devices[0].id) }}">Device Data</a>
+                                <a class="nav-link" href="{{ url_for('devices.curl_device', device_id=current_user.devices[0].id) }}">Device Data</a>
                             </li>
                             <li class="nav-item">                                                      
                                 <a class="nav-link" href="{{ url_for('devices.add_device') }}">Add Device</a>

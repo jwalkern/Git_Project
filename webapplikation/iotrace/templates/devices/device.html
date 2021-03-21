@@ -7,7 +7,7 @@
     <div class="row justify-content-md-center">
         {%for i in current_user.devices %}
         <div class="col-sm-auto">
-            <a href="{{ url_for('devices.device', device_id=i.id) }}" class="btn btn-outline-success">{{loop.index}}</a>
+            <a href="{{ url_for('devices.curl_device', device_id=i.id) }}" class="btn btn-outline-success">{{loop.index}}</a>
         </div>       
         {%endfor%}
     </div>
@@ -107,11 +107,19 @@
             <p>{{ device.data_firedevice[0].timestamp }}</p>
         </div>
         <div class="col">
-            <p>Alarm 1</p>
+            {% if device.data_firedevice[0].alarm_1 != true %}
+            <img src="{{ url_for('static', filename='images/icon/alarm_green.png') }}" alt="" width=20px height=20px >
+            {% else %}
+            <img src="{{ url_for('static', filename='images/icon/alarm_red.png') }}" alt="" width=20px height=20px >
+            {% endif %}
             <p>{{ device.data_firedevice[0].alarm_1 }}</p>
         </div>
         <div class="col">
-            <p>Alarm 2</p>
+            {% if device.data_firedevice[0].alarm_2 != true %}
+            <img src="{{ url_for('static', filename='images/icon/alarm_green.png') }}" alt="" width=20px height=20px >
+            {% else %}
+            <img src="{{ url_for('static', filename='images/icon/alarm_red.png') }}" alt="" width=20px height=20px >
+            {% endif %}
             <p>{{ device.data_firedevice[0].alarm_2 }}</p>
         </div>
         <div class="col">

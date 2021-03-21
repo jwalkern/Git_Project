@@ -9,14 +9,14 @@ from iotrace.curls.curl import curl_all_device_pos, curl_device_data, curl_devic
 
 devices = Blueprint('devices', __name__)
 
-@devices.route('/NEWdashboard')
+@devices.route('/dashboard')
 @login_required
 def curl_dashboard():
     devices = Device.query.filter_by(user_id=current_user.id).order_by(Device.devicetype.desc())
     device_data, all_device, GOOGLEMAPS_KEY = curl_all_device_pos(devices)
     return render_template('devices/NEWdashboard.html',  title='Dashboard', devices=devices, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY, all_device=all_device, device_data=device_data)
 
-@devices.route('/NEWdashboard/device/data/<device_id>')
+@devices.route('/dashboard/device/data/<device_id>')
 @login_required
 def curl_device(device_id):
     device = Device.query.get_or_404(device_id)
@@ -45,7 +45,7 @@ def curl_device(device_id):
 
 
 
-@devices.route('/dashboard')
+@devices.route('/OLDdashboard')
 @login_required
 def dashboard():
     devices = Device.query.filter_by(user_id=current_user.id).order_by(Device.devicetype.desc())
@@ -53,7 +53,7 @@ def dashboard():
     return render_template('devices/dashboard.html',  title='Dashboard', devices=devices, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY, all_device=all_device)
 
 
-@devices.route('/dashboard/device/data/<device_id>')
+@devices.route('/OLDdashboard/device/data/<device_id>')
 @login_required
 def device(device_id):
     device = Device.query.get_or_404(device_id)
@@ -86,7 +86,7 @@ def update_device(device_id):
         device.devicetype = form.devicetype.data
         db.session.commit()
         flash('Your device has been updated', 'success')
-        return redirect(url_for('devices.device', device_id=device.id))
+        return redirect(url_for('devices.curl_device', device_id=device.id))
     elif request.method == 'GET':
         form.devicename.data = device.devicename
         form.devicetype.data = device.devicetype
@@ -101,7 +101,7 @@ def delete_device(device_id):
     db.session.delete(device)
     db.session.commit()
     flash('Your device has been deleted!', 'success')
-    return redirect(url_for('devices.dashboard'))
+    return redirect(url_for('devices.curl_dashboard'))
 
 @devices.route('/dashboard/device/new', methods=['GET', 'POST'])
 @login_required
@@ -112,6 +112,6 @@ def add_device():
         db.session.add(device)
         db.session.commit()
         flash('The device have been added!', 'success')
-        return redirect(url_for('devices.dashboard'))
+        return redirect(url_for('devices.curl_dashboard'))
     return render_template('devices/add_device.html', title='Add Device', form=form)
 

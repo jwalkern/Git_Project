@@ -14,14 +14,14 @@ accounts = Blueprint('accounts', __name__)
 @accounts.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('devices.dashboard'))
+        return redirect(url_for('devices.curl_dashboard'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('devices.dashboard'))
+            return redirect(next_page) if next_page else redirect(url_for('devices.curl_dashboard'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('accounts/login.html', title='Login', form=form)
@@ -29,7 +29,7 @@ def login():
 @accounts.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('devices.dashboard'))
+        return redirect(url_for('devices.curl_dashboard'))
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
@@ -68,7 +68,7 @@ def account():
 @accounts.route('/reset_password', methods=['GET', 'POST'])
 def reset_request():
     if current_user.is_authenticated:
-        return redirect(url_for('devices.dashboard'))
+        return redirect(url_for('devices.curl_dashboard'))
     form = RequestResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -80,7 +80,7 @@ def reset_request():
 @accounts.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_token(token):
     if current_user.is_authenticated:
-        return redirect(url_for('devices.dashboard'))
+        return redirect(url_for('devices.curl_dashboard'))
     user = User.verify_reset_token(token)
     if user is None:
         flash('That is an invalid or expired token.', 'warning')

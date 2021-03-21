@@ -9,7 +9,7 @@
         {% if device.devicetype != 'fire' and device.data_trackingdevice|length > 0  %}
             <div class="row" style="border:1px solid #89ca84;">    
                 <div class="col">
-                    <a href="{{ url_for('devices.device', device_id=device.id) }}">{{device.device_mac}}</a>
+                    <a href="{{ url_for('devices.curl_device', device_id=device.id) }}">{{device.device_mac}}</a>
                 </div>
 
                 <div class="col">
@@ -43,7 +43,7 @@
         {% if device.devicetype == 'fire' and device.data_firedevice|length > 0 %}         
             <div class="row" style="border:1px solid #89ca84;">    
                 <div class="col">
-                    <a href="{{ url_for('devices.device', device_id=device.id) }}">{{device.device_mac}}</a>
+                    <a href="{{ url_for('devices.curl_device', device_id=device.id) }}">{{device.device_mac}}</a>
                 </div>
                 <div class="col">
                     <p>{{device.devicename}}</p>

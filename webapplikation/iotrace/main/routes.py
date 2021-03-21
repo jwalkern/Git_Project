@@ -23,7 +23,7 @@ admin.add_view(Admin_Model_View(TrackingDeviceData, db.session))
 @main.route(('/home'))
 def home(methods=['GET', 'POST']):    
     if current_user.is_authenticated:
-        return redirect(url_for('devices.dashboard'))
+        return redirect(url_for('devices.curl_dashboard'))
     return redirect(url_for('accounts.login'))
 
 
