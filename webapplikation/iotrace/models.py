@@ -44,6 +44,7 @@ class Device(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     data_trackingdevice = db.relationship('TrackingDeviceData', cascade='all, delete-orphan', backref='ref_trackingdevice', lazy=True)
     data_firedevice = db.relationship('FireDeviceData', cascade='all, delete-orphan', backref='ref_firedevice', lazy=True)
+    trigger_trackingdevice = db.relationship('TrackingDeviceTrigger', cascade='all, delete-orphan', backref='trig_track', lazy=True)
     
     
     def __repr__(self):
@@ -58,10 +59,31 @@ class TrackingDeviceData(db.Model):
     hpa = db.Column(db.Integer, nullable=True)
     volt = db.Column(db.Integer, nullable=True)
     lte_rssi = db.Column(db.Integer, nullable=True)
-    device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False)
+    device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False) 
     
     def __repr__(self):
         return f"TrackingDeviceData('{self.timestamp}', '{self.pos}', '{self.temp}', '{self.humid}', '{self.hpa}', '{self.volt}', '{self.lte_rssi}')"
+
+class TrackingDeviceTrigger(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    mintemp = db.Column(db.Integer, nullable=True)
+    maxtemp = db.Column(db.Integer, nullable=True)
+    minhumid = db.Column(db.Integer, nullable=True)
+    maxhumid = db.Column(db.Integer, nullable=True)
+    minhpa = db.Column(db.Integer, nullable=True)
+    maxhpa = db.Column(db.Integer, nullable=True)
+    device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False)
+
+    def __repr__(self):
+        return f"Trigger('{self.device_id}', '{self.mintemp}', '{self.maxtemp}', '{self.minhumid}', '{self.maxhumid}', '{self.minhpa}', '{self.maxhpa}')"
+
+
+class OwnedDeviceFromXtel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    device_mac = db.Column(db.String(20), unique=True, nullable=False)
+
+    def __repr__(self):
+        return f"Info('{self.id}', '{self.device_mac}')"
    
 class FireDeviceData(db.Model):
     id = db.Column(db.Integer, primary_key=True)

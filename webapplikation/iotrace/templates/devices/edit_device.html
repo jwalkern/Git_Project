@@ -1,0 +1,177 @@
+{% extends "layout.html" %}
+{% set active_page = "edit_device" %}
+{% block content %}
+
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Edit Device</legend>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    {{ form.devicename.label(class="form-control-label") }}
+                    {% if form.devicename.errors %}
+                        {{ form.devicename(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.devicename.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.devicename(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    {{ form.devicetype.label(class="form-control-label") }}
+                    {% if form.devicetype.errors %}
+                        {{ form.devicetype(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.devicetype.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.devicetype(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% if device.devicetype == 'track' %}
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    {{ form.mintemp.label(class="form-control-label") }}
+                    {% if form.mintemp.errors %}
+                        {{ form.mintemp(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.mintemp.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.mintemp(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    {{ form.mintemp.label(class="form-control-label") }}
+                    {% if form.mintemp.errors %}
+                        {{ form.mintemp(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.mintemp.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.mintemp(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    {{ form.mintemp.label(class="form-control-label") }}
+                    {% if form.mintemp.errors %}
+                        {{ form.mintemp(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.mintemp.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.mintemp(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    {{ form.maxtemp.label(class="form-control-label") }}
+                    {% if form.maxtemp.errors %}
+                        {{ form.maxtemp(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.maxtemp.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.maxtemp(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    {{ form.minhumid.label(class="form-control-label") }}
+                    {% if form.minhumid.errors %}
+                        {{ form.minhumid(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.minhumid.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.minhumid(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    {{ form.maxhumid.label(class="form-control-label") }}
+                    {% if form.maxhumid.errors %}
+                        {{ form.maxhumid(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.maxhumid.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.maxhumid(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    {{ form.minhpa.label(class="form-control-label") }}
+                    {% if form.minhpa.errors %}
+                        {{ form.minhpa(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.minhpa.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.minhpa(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    {{ form.maxhpa.label(class="form-control-label") }}
+                    {% if form.maxhpa.errors %}
+                        {{ form.maxhpa(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.maxhpa.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.maxhpa(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}  
+    </fieldset>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-success") }} <a href="{{ url_for('devices.curl_device', device_id=device.id) }}" class="btn btn-outline-secondary">Cancel</a> 
+    </div>
+</form>
+
+{% endblock content %}

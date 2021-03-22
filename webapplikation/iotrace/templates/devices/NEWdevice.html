@@ -1,5 +1,11 @@
 {% extends "layout.html" %}
 
+{% block head %}
+
+  <meta http-equiv="refresh" content="600">
+
+{% endblock %}
+
 {% block content %}
 
 
@@ -18,7 +24,7 @@
 
 <div class="row justify-content-md-end ">
     <div class="col-md-auto">
-        <a class="btn btn-secondary btn-sm m-1" href="{{ url_for('devices.update_device', device_id=device.id) }}">Edit Device</a>
+        <a class="btn btn-secondary btn-sm m-1" href="{{ url_for('devices.edit_device', device_id=device.id) }}">Edit Device</a>
         <button type="button" class="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
     </div>
 </div>
@@ -124,7 +130,7 @@
                         {{ device_data[key][0]['data']['alarm_1'] }}
                     </div>
                     <div class="col">
-                        {% if device_data[key][0]['data']['alarm_1'] != true %}
+                        {% if device_data[key][0]['data']['alarm_2'] != true %}
                         <img src="{{ url_for('static', filename='images/icon/fire_extinguisher_green.png') }}" alt="" width=20px height=20px >
                         {% else %}
                         <img src="{{ url_for('static', filename='images/icon/fire_extinguisher_red.png') }}" alt="" width=20px height=20px >

@@ -1,10 +1,21 @@
 {% extends "layout.html" %}
 {% set active_page = "dashboard" %}
 
+{% block head %}
+
+  <meta http-equiv="refresh" content="600">
+
+{% endblock %}
+
 {% block content %}
 
 
 <legend class="border-bottom mb-4">Dashboard</legend>
+<div class="row justify-content-md-end">
+    <div class="col-md-auto">
+        <a href="" class="btn btn-outline-success">Update Data</a>        
+    </div>   
+</div>
 <div class="container">
     {% for device in devices %}
         {% if device.devicetype != 'fire' %}
@@ -19,7 +30,7 @@
                             <p>{{device.devicename}}</p>
                         </div>   
                         <div class="col">
-                            <img src="{{ url_for('static', filename='images/icon/date.png') }}" alt="" width=20px height=20px >
+                            <img src="{{ url_for('static', filename='images/icon/date_green.png') }}" alt="" width=20px height=20px >
                             {{ device_data[key][0]['ts']}}
                         </div>
                         <div class="col">
@@ -33,11 +44,20 @@
                         <div class="col">
                             <img src="{{ url_for('static', filename='images/icon/hpa.png') }}" alt="" width=20px height=20px >
                             {{ device_data[key][0]['data']['hpa'] }}
-                        </div><div class="col">
-                            <img src="{{ url_for('static', filename='images/icon/volt.png') }}" alt="" width=20px height=20px >
+                        </div>
+                        <div class="col">
+                            {% if device_data[key][0]['data']['volt'] > 500 %}
+                            <img src="{{ url_for('static', filename='images/icon/volt_green.png') }}" alt="" width=20px height=20px >
+                            {% else %}
+                            <img src="{{ url_for('static', filename='images/icon/volt_red.png') }}" alt="" width=20px height=20px >
+                            {% endif %}
                             {{ device_data[key][0]['data']['volt'] }}
                         </div><div class="col">
-                            <img src="{{ url_for('static', filename='images/icon/wifi.png') }}" alt="" width=20px height=20px >
+                            {% if device_data[key][0]['data']['lte_rssi'] > -80 %}
+                            <img src="{{ url_for('static', filename='images/icon/lte_rssi_green.png') }}" alt="" width=20px height=20px >
+                            {% else %}
+                            <img src="{{ url_for('static', filename='images/icon/lte_rssi_red.png') }}" alt="" width=20px height=20px >
+                            {% endif %}
                             {{ device_data[key][0]['data']['lte_rssi'] }}
                         </div>
                     </div>
@@ -68,7 +88,7 @@
                         {{ device_data[key][0]['data']['alarm_1'] }}
                     </div>
                     <div class="col">
-                        {% if device_data[key][0]['data']['alarm_1'] != true %}
+                        {% if device_data[key][0]['data']['alarm_2'] != true %}
                         <img src="{{ url_for('static', filename='images/icon/fire_extinguisher_green.png') }}" alt="" width=20px height=20px >
                         {% else %}
                         <img src="{{ url_for('static', filename='images/icon/fire_extinguisher_red.png') }}" alt="" width=20px height=20px >
@@ -80,8 +100,7 @@
                         <img src="{{ url_for('static', filename='images/icon/volt_green.png') }}" alt="" width=20px height=20px >
                         {% else %}
                         <img src="{{ url_for('static', filename='images/icon/volt_red.png') }}" alt="" width=20px height=20px >
-                        {% endif %}
-                        
+                        {% endif %}                        
                         {{ device_data[key][0]['data']['volt'] }}
                     </div><div class="col">
                         {% if device_data[key][0]['data']['lte_rssi'] > -80 %}
@@ -102,9 +121,9 @@
 
 <script>
     function initMap() {
-        var location = { lat: 0, lng: 0 };
+        var location = { lat: 55.887635, lng: 9.461349 };
         var map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 1,
+            zoom: 6,
             center: location
         });
         {% for device in all_device %}
