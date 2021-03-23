@@ -28,16 +28,15 @@ def curl_device_data(device):
 	device_data = {}
 	mac_addr = str(device.device_mac)
 	obj = curl_get_data(mac_addr)
-	device_data[mac_addr] = obj
+	device_data['device_mac'] = mac_addr
+	device_data['data'] = obj
 	return device_data
 
 
-def curl_device_temp(device):
-	mac_addr = str(device.device_mac)
-	obj = curl_get_data(mac_addr)
+def curl_device_temp(device_data):
 	time = []
 	temp = []
-	for item in obj:
+	for item in device_data['data']:
 		time.insert(0,item['ts'])
 		temp.insert(0,item['data']['temp'])
 	# Generate plot
@@ -54,13 +53,11 @@ def curl_device_temp(device):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def curl_device_humid(device):
-	mac_addr = str(device.device_mac)
-	obj = curl_get_data(mac_addr)
+def curl_device_humid(device_data):
 	time = []
 	humid = []
 	# Fetching data
-	for item in obj:
+	for item in device_data['data']:
 		time.insert(0,item['ts'])
 		humid.insert(0,item['data']['humid'])
 	# Generate plot
@@ -77,13 +74,11 @@ def curl_device_humid(device):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def curl_device_hpa(device):
-	mac_addr = str(device.device_mac)
-	obj = curl_get_data(mac_addr)
+def curl_device_hpa(device_data):
 	time = []
 	hpa = []
 	# Fetching data
-	for item in obj:
+	for item in device_data['data']:
 		time.insert(0,item['ts'])
 		hpa.insert(0,item['data']['hpa'])
 	# Generate plot
@@ -100,13 +95,11 @@ def curl_device_hpa(device):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def curl_device_volt(device):
-	mac_addr = str(device.device_mac)
-	obj = curl_get_data(mac_addr)
+def curl_device_volt(device_data):
 	time = []
 	volt = []
 	# Fetching data
-	for item in obj:
+	for item in device_data['data']:
 		time.insert(0,item['ts'])
 		volt.insert(0,item['data']['volt'])
 	# Generate plot
@@ -124,13 +117,11 @@ def curl_device_volt(device):
 	return PNG
 
 
-def curl_device_lte_rssi(device):
-	mac_addr = str(device.device_mac)
-	obj = curl_get_data(mac_addr)
+def curl_device_lte_rssi(device_data):
 	time = []
 	lte_rssi = []
 	# Fetching data
-	for item in obj:
+	for item in device_data['data']:
 		time.insert(0,item['ts'])
 		lte_rssi.insert(0,item['data']['lte_rssi'])
 	# Generate plot
@@ -147,13 +138,11 @@ def curl_device_lte_rssi(device):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def curl_device_alarm1(device):
-	mac_addr = str(device.device_mac)
-	obj = curl_get_data(mac_addr)
+def curl_device_alarm1(device_data):
 	time = []
 	alarm = []
 	# Fetching data
-	for item in obj:
+	for item in device_data['data']:
 		time.insert(0,item['ts'])
 		alarm.insert(0,item['data']['alarm_1'])
 	# Generate plot
@@ -170,13 +159,11 @@ def curl_device_alarm1(device):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG
 
-def curl_device_alarm2(device):
-	mac_addr = str(device.device_mac)
-	obj = curl_get_data(mac_addr)
+def curl_device_alarm2(device_data):
 	time = []
 	alarm = []
 	# Fetching data
-	for item in obj:
+	for item in device_data['data']:
 		time.insert(0,item['ts'])
 		alarm.insert(0,item['data']['alarm_2'])
 	# Generate plot
@@ -193,15 +180,13 @@ def curl_device_alarm2(device):
 	PNG += base64.b64encode(pngImage.getvalue()).decode('utf8')
 	return PNG 	 
 
-def curl_device_pos(device):
-	mac_addr = str(device.device_mac)
-	obj = curl_get_data(mac_addr)
+def curl_device_pos(device, device_data):
 	LatDec = ''
 	LngDec = ''
 	count = 0
 	label = device.devicename
 	icon = "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
-	for item in obj:
+	for item in device_data['data']:
 		if item['data']['pos'] != '':
 			Lat = item['data']['pos'].split(',')[1].translate({ord(i): None for i in 'NS'})
 			LAT_DD = int(float(Lat)/100)
