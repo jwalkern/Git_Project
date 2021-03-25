@@ -32,19 +32,6 @@
                 {{ form.devicename(class="form-control form-control-lg") }}
             {% endif %}
         </div>
-        <div class="form-group">
-            {{ form.devicetype.label(class="form-control-label") }}
-            {% if form.devicetype.errors %}
-                {{ form.devicetype(class="form-control form-control-lg is-invalid") }}
-                <div class="invalid-feedback">
-                    {% for error in form.devicetype.errors %}
-                        <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-            {% else %}
-                {{ form.devicetype(class="form-control form-control-lg") }}
-            {% endif %}
-        </div>
     </fieldset>
     <div class="form-group">
         {{ form.submit(class="btn btn-outline-success") }}

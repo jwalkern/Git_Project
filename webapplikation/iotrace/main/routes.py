@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, url_for, flash, redirect
 from flask_login import login_required, current_user
 from flask_admin.contrib.sqla import ModelView
 from iotrace import db, admin
-from iotrace.models import User, Device, TrackingDeviceData, FireDeviceData, TrackingDeviceTrigger, OwnedDeviceFromXtel
+from iotrace.models import User, Device, TrackingDeviceData, FireDeviceData, TrackingDeviceTrigger, Xtel
 from iotrace.main.forms import GenerateTrackingDeviceData
 
 main = Blueprint('main', __name__)
@@ -20,7 +20,7 @@ class Admin_Model_View(ModelView):
 admin.add_view(Admin_Model_View(User, db.session))
 admin.add_view(Admin_Model_View(Device, db.session))
 admin.add_view(Admin_Model_View(TrackingDeviceTrigger, db.session))
-admin.add_view(Admin_Model_View(OwnedDeviceFromXtel, db.session))
+admin.add_view(Admin_Model_View(Xtel, db.session))
 
 #Dette er vores startside og viser index.html 
 @main.route('/')

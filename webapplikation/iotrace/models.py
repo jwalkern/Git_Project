@@ -13,7 +13,7 @@ def load_user(user_id):
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, nullable=False)
+    username = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
@@ -39,12 +39,13 @@ class User(db.Model, UserMixin):
 class Device(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     devicename = db.Column(db.String(100), nullable=False)
-    devicetype = db.Column(db.String(100), nullable=False)
     device_mac = db.Column(db.String(20), unique=True, nullable=False)
+    devicetype = db.Column(db.String(50), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     data_trackingdevice = db.relationship('TrackingDeviceData', cascade='all, delete-orphan', backref='ref_trackingdevice', lazy=True)
     data_firedevice = db.relationship('FireDeviceData', cascade='all, delete-orphan', backref='ref_firedevice', lazy=True)
     trigger_trackingdevice = db.relationship('TrackingDeviceTrigger', cascade='all, delete-orphan', backref='trig_track', lazy=True)
+
     
     
     def __repr__(self):
@@ -78,9 +79,12 @@ class TrackingDeviceTrigger(db.Model):
         return f"Trigger('{self.device_id}', '{self.mintemp}', '{self.maxtemp}', '{self.minhumid}', '{self.maxhumid}', '{self.minhpa}', '{self.maxhpa}')"
 
 
-class OwnedDeviceFromXtel(db.Model):
+class Xtel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     device_mac = db.Column(db.String(20), unique=True, nullable=False)
+    devicetype = db.Column(db.String(50), nullable=False)
+    
+    
 
     def __repr__(self):
         return f"Info('{self.id}', '{self.device_mac}')"

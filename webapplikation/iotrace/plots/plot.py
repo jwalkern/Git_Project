@@ -1,7 +1,7 @@
 import os
 import io
 import base64
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, current_app
 from flask_login import login_required, current_user
 from matplotlib.figure import Figure
 from matplotlib import pyplot as plt
@@ -189,7 +189,7 @@ def device_pos(device):
 			count = count + 1
 
 	pos = f'lat:{LatDec}, lng:{LngDec}'
-	GOOGLEMAPS_KEY =  os.environ.get('GOOGLEMAPS_KEY')	
+	GOOGLEMAPS_KEY =  current_app.config['GOOGLEMAPS_KEY']	
 	return pos, label, icon, GOOGLEMAPS_KEY
 
 def all_device_pos(devices):
@@ -226,6 +226,6 @@ def all_device_pos(devices):
 					count = count + 1
 		else:
 			continue
-	GOOGLEMAPS_KEY = os.environ.get('GOOGLEMAPS_KEY')
+	GOOGLEMAPS_KEY = current_app.config['GOOGLEMAPS_KEY']
 	return device_pos, GOOGLEMAPS_KEY
 

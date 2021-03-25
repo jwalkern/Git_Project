@@ -3,7 +3,7 @@ import requests
 import json
 import io
 import base64
-from flask import Blueprint
+from flask import Blueprint, current_app
 from matplotlib.figure import Figure
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -14,7 +14,7 @@ curls = Blueprint('curls', __name__)
 
 def curl_get_data(device_mac):
 	url = 'https://cloud.moviot.dk/web/logs/' + device_mac
-	myToken = os.environ.get('XTEL_TOKEN')
+	myToken = current_app.config['XTEL_TOKEN']
 	head = {"Authorization":"Token {}".format(myToken)}
 	obj = requests.get(url, headers=head)
 	collect_byte = []
@@ -210,7 +210,7 @@ def curl_device_pos(device, device_data):
 			count = count + 1
 
 	pos = f'lat:{LatDec}, lng:{LngDec}'
-	GOOGLEMAPS_KEY =  os.environ.get('GOOGLEMAPS_KEY')	
+	GOOGLEMAPS_KEY =  current_app.config['GOOGLEMAPS_KEY']	
 	return pos, label, icon, GOOGLEMAPS_KEY
 
 
@@ -253,5 +253,5 @@ def curl_all_device_pos(devices):
 					count = count + 1
 		else:
 			continue
-	GOOGLEMAPS_KEY = os.environ.get('GOOGLEMAPS_KEY')
+	GOOGLEMAPS_KEY = current_app.config['GOOGLEMAPS_KEY']
 	return device_data, device_pos, GOOGLEMAPS_KEY
