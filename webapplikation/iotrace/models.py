@@ -65,6 +65,18 @@ class TrackingDeviceData(db.Model):
     def __repr__(self):
         return f"TrackingDeviceData('{self.timestamp}', '{self.pos}', '{self.temp}', '{self.humid}', '{self.hpa}', '{self.volt}', '{self.lte_rssi}')"
 
+class FireDeviceData(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime, nullable=True)
+    alarm_1 = db.Column(db.Boolean, nullable=True)
+    alarm_2 = db.Column(db.Boolean, nullable=True)
+    volt = db.Column(db.Integer, nullable=True)
+    lte_rssi = db.Column(db.Integer, nullable=True)
+    device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False)
+
+    def __repr__(self):
+        return f"FireDeviceData('{self.timestamp}', '{self.alarm_1}', '{self.alarm_2}', '{self.volt}', '{self.lte_rssi}')"
+
 class TrackingDeviceTrigger(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     mintemp = db.Column(db.Integer, nullable=True)
@@ -89,14 +101,4 @@ class Xtel(db.Model):
     def __repr__(self):
         return f"Info('{self.id}', '{self.device_mac}')"
    
-class FireDeviceData(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    timestamp = db.Column(db.DateTime, nullable=True)
-    alarm_1 = db.Column(db.Boolean, nullable=True)
-    alarm_2 = db.Column(db.Boolean, nullable=True)
-    volt = db.Column(db.Integer, nullable=True)
-    lte_rssi = db.Column(db.Integer, nullable=True)
-    device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False)
 
-    def __repr__(self):
-        return f"FireDeviceData('{self.timestamp}', '{self.alarm_1}', '{self.alarm_2}', '{self.volt}', '{self.lte_rssi}')"
