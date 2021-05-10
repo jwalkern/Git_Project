@@ -1,7 +1,9 @@
 import os
 import json
 
-with open('C:/Users/JanNi/OneDrive/UCN/praktik/UTS/datadump/config.json') as config_file:
+file = "C:/Users/Jwalkern/OneDrive/UCN/praktik/UTS/datadump/config.json"
+
+with open(file) as config_file:
 	config = json.load(config_file)
 
 class Config:

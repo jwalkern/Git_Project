@@ -19,6 +19,8 @@ class Admin_Model_View(ModelView):
             return False
 admin.add_view(Admin_Model_View(User, db.session))
 admin.add_view(Admin_Model_View(Device, db.session))
+admin.add_view(Admin_Model_View(TrackingDeviceData, db.session))
+admin.add_view(Admin_Model_View(FireDeviceData, db.session))
 admin.add_view(Admin_Model_View(TrackingDeviceTrigger, db.session))
 admin.add_view(Admin_Model_View(Xtel, db.session))
 
