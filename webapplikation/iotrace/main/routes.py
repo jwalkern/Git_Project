@@ -13,7 +13,7 @@ main = Blueprint('main', __name__)
 
 class Admin_Model_View(ModelView):
     def is_accessible(self):
-        if current_user.id == 1:
+        if current_user.id == 1 or current_user.role == 'admin':
             return True
         else:
             return False

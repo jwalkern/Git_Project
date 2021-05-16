@@ -14,7 +14,8 @@ devices = Blueprint('devices', __name__)
 def curl_dashboard():
     devices = Device.query.filter_by(user_id=current_user.id).order_by(Device.devicetype.desc())
     device_data, all_device, GOOGLEMAPS_KEY = curl_all_device_pos(devices)
-    return render_template('devices/NEWdashboard.html',  title='Dashboard', devices=devices, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY, all_device=all_device, device_data=device_data)
+    logo_file = url_for('static', filename='images/profile_pics/' + current_user.logo_file)
+    return render_template('devices/NEWdashboard.html',  title='Dashboard', devices=devices, GOOGLEMAPS_KEY=GOOGLEMAPS_KEY, logo_file=logo_file, all_device=all_device, device_data=device_data)
 
 @devices.route('/dashboard/device/data/<device_id>')
 @login_required

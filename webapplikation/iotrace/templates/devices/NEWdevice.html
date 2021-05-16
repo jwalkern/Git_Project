@@ -2,7 +2,7 @@
 
 {% block head %}
 
-  <meta http-equiv="refresh" content="600">
+  <meta http-equiv="refresh" content="60">
 
 {% endblock %}
 
@@ -203,7 +203,7 @@
 
 <script>
     function initMap() {
-        var location = { {{ pos}} };
+        var location = { {{ pos }} };
         var map = new google.maps.Map(document.getElementById("map"), {
             zoom: 10,
             center: location

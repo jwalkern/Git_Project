@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from iotrace import db, bcrypt
 from iotrace.models import User, Device
 from iotrace.accounts.forms import LoginForm, RegistrationForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm
-from iotrace.accounts.utils import save_picture, send_reset_email
+from iotrace.accounts.utils import save_logo, save_picture, send_reset_email
 
 
 
@@ -53,6 +53,9 @@ def account():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
             current_user.image_file = picture_file
+        if form.logo.data:
+            logo_file = save_logo(form.logo.data)
+            current_user.logo_file = logo_file
         current_user.username = form.username.data
         current_user.email = form.email.data
         db.session.commit()
@@ -62,8 +65,9 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email        
     image_file = url_for('static', filename='images/profile_pics/' + current_user.image_file)
+    logo_file = url_for('static', filename='images/account/' + current_user.logo_file)
     devices = Device.query.filter_by(user_id=current_user.id)
-    return render_template('accounts/account.html', title='Account', image_file=image_file, devices=devices, form=form)
+    return render_template('accounts/account.html', title='Account', image_file=image_file, logo_file=logo_file, devices=devices, form=form)
 
 @accounts.route('/reset_password', methods=['GET', 'POST'])
 def reset_request():

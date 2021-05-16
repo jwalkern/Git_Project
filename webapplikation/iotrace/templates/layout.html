@@ -27,7 +27,7 @@
             <nav class="navbar navbar-expand-sm navbar-light bg-white" aria-label="Third navbar example" style="border:2px solid #89ca84;">
                 <div class="container">
                     <a class="navbar-brand" href="/">
-                        <img src="{{ url_for('static', filename='images/account/SG-Brand-logo_salg-service.png') }}" alt="123" width="215" height="60" class="center" >
+                        <img src="{{ url_for('static', filename='images/account/' + current_user.logo_file) }}" alt="123" width="215" height=100% class="center" >
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#Navbar" aria-controls="Navbar" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -58,7 +58,7 @@
                     <div class="navbar-collapse collapse" id="Navbar">                    
                         <ul class="navbar-nav ms-auto">
                             {% if current_user.is_authenticated %}
-                            {% if current_user.id == 1 %}
+                            {% if current_user.id == 1 or current_user.role == 'admin' %}
                             <li class="nav-item">                              
                                 <a class="nav-link" href="/admin">Admin Console</a>
                             </li>

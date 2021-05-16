@@ -16,6 +16,8 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    logo_file = db.Column(db.String(20), nullable=False, default='ioTrace.jpg')
+    role = db.Column(db.String(6), nullable=False, default='user')
     password = db.Column(db.String(60), nullable=False)
     devices = db.relationship('Device', cascade='all, delete-orphan', backref='owner', lazy=True)
     
