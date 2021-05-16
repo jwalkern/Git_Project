@@ -1,7 +1,30 @@
 import os
-import pymysql
+import sqlite3
 from flask import jsonify
 
+database = "D:/Git_projects/iotrace/webapplikation/iotrace/site.db"
+
+def open_connection():
+    con = sqlite3.connect(database)
+    return con
+
+def get_device_data(device_mac):
+    con = open_connection()
+    with con.cursor() as cursor:
+        result = cursor.execute('SELECT * FROM DeviceData WHERE device_mac=' +str(device_mac)+';')
+        device_data =  cursor.fetchall()
+        if result > 0:
+            device_data_list = jsonify(device_data)
+            return device_data_list
+        else:
+            device_data_list = 'No data with', str(device_mac), 'in DB.'
+            return device_data_list
+
+
+
+
+
+"""
 db_user = os.environ.get('CLOUD_SQL_USERNAME')
 db_password = os.environ.get('CLOUD_SQL_PASSWORD')
 db_name = os.environ.get('CLOUD_SQL_DATABASE_NAME')
@@ -33,6 +56,8 @@ def get_user(userID):
             user_list = 'No user with', str(userID), 'in DB.'
         return user_list
 
+
+
 def get_device():
     conn = open_connection()
     with conn.cursor() as cursor:
@@ -56,3 +81,4 @@ def get_device_by_userID(userID):
             device_list = 'No device in DB'
     conn.close()
     return device_list
+"""

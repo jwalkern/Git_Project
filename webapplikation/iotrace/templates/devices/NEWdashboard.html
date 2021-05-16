@@ -13,14 +13,16 @@
 <legend class="border-bottom mb-4">Dashboard</legend>
 <div class="row justify-content-md-end">
     <div class="col-md-auto">
-        <a href="" class="btn btn-outline-success">Update Data</a>        
+        <a href="" class="btn btn-outline-success">Update Data</a> 
+
     </div>   
 </div>
 <div class="container">
     {% for device in devices %}
+
         {% if device.devicetype != 'fire' %}
-            {% for key in device_data %}
-                {% if key == device.device_mac and device_data[key]|length > 0 %}
+            
+                {% if device_data[device.device_mac]|length > 0 %}
                     <div class="row" style="border:1px solid #89ca84;">    
                         <div class="col">
                             <a href="{{ url_for('devices.curl_device', device_id=device.id) }}">{{device.device_mac}}</a>
@@ -31,43 +33,43 @@
                         </div>   
                         <div class="col">
                             <img src="{{ url_for('static', filename='images/icon/date_green.png') }}" alt="" width=20px height=20px >
-                            {{ device_data[key][0]['ts']}}
+                            {{ device_data[device.device_mac][0].timestamp.strftime('%d-%m-%Y %H:%M:%S')}}
                         </div>
                         <div class="col">
                             <img src="{{ url_for('static', filename='images/icon/temp.png') }}" alt="" width=20px height=20px >
-                            {{ device_data[key][0]['data']['temp'] }}
+                            {{ device_data[device.device_mac][0].temp }}
                         </div>
                         <div class="col">
                             <img src="{{ url_for('static', filename='images/icon/humid.png') }}" alt="" width=20px height=20px >
-                            {{ device_data[key][0]['data']['humid'] }}
+                            {{ device_data[device.device_mac][0].humid }}
                         </div>
                         <div class="col">
                             <img src="{{ url_for('static', filename='images/icon/hpa.png') }}" alt="" width=20px height=20px >
-                            {{ device_data[key][0]['data']['hpa'] }}
+                            {{ device_data[device.device_mac][0].hpa }}
                         </div>
                         <div class="col">
-                            {% if device_data[key][0]['data']['volt'] > 500 %}
+                            {% if device_data[device.device_mac][0].volt > 0.500 %}
                             <img src="{{ url_for('static', filename='images/icon/volt_green.png') }}" alt="" width=20px height=20px >
                             {% else %}
                             <img src="{{ url_for('static', filename='images/icon/volt_red.png') }}" alt="" width=20px height=20px >
                             {% endif %}
-                            {{ device_data[key][0]['data']['volt'] }}
+                            {{ device_data[device.device_mac][0].volt }}
                         </div><div class="col">
-                            {% if device_data[key][0]['data']['lte_rssi'] > -80 %}
+                            {% if device_data[device.device_mac][0].lte_rssi > -80 %}
                             <img src="{{ url_for('static', filename='images/icon/lte_rssi_green.png') }}" alt="" width=20px height=20px >
                             {% else %}
                             <img src="{{ url_for('static', filename='images/icon/lte_rssi_red.png') }}" alt="" width=20px height=20px >
                             {% endif %}
-                            {{ device_data[key][0]['data']['lte_rssi'] }}
+                            {{ device_data[device.device_mac][0].lte_rssi }}
                         </div>
                     </div>
                 {% endif %}
-            {% endfor %}
+            
         {% endif %}
 
         {% if device.devicetype == 'fire' %}
-            {% for key in device_data %}
-                {% if key == device.device_mac and device_data[key]|length > 0 %}        
+            
+                {% if device_data[device.device_mac]|length > 0 %}        
                     <div class="row" style="border:1px solid #89ca84;">    
                         <div class="col">
                             <a href="{{ url_for('devices.curl_device', device_id=device.id) }}">{{device.device_mac}}</a>
@@ -77,42 +79,42 @@
                         </div>   
                         <div class="col">
                         <img src="{{ url_for('static', filename='images/icon/date_green.png') }}" alt="" width=20px height=20px >
-                        {{ device_data[key][0]['ts']}}
+                        {{ device_data[device.device_mac][0].timestamp.strftime('%d-%m-%Y %H:%M:%S')}}
                     </div>
                     <div class="col">
-                        {% if device_data[key][0]['data']['alarm_1'] != true %}
+                        {% if device_data[device.device_mac][0].alarm_1 != true %}
                         <img src="{{ url_for('static', filename='images/icon/hpa_green.png') }}" alt="" width=20px height=20px >
                         {% else %}
                         <img src="{{ url_for('static', filename='images/icon/hpa_red.png') }}" alt="" width=20px height=20px >
                         {% endif %}
-                        {{ device_data[key][0]['data']['alarm_1'] }}
+                        {{ device_data[device.device_mac][0].alarm_1 }}
                     </div>
                     <div class="col">
-                        {% if device_data[key][0]['data']['alarm_2'] != true %}
+                        {% if device_data[device.device_mac][0].alarm_2 != true %}
                         <img src="{{ url_for('static', filename='images/icon/fire_extinguisher_green.png') }}" alt="" width=20px height=20px >
                         {% else %}
                         <img src="{{ url_for('static', filename='images/icon/fire_extinguisher_red.png') }}" alt="" width=20px height=20px >
                         {% endif %}
-                        {{ device_data[key][0]['data']['alarm_2'] }}
+                        {{ device_data[device.device_mac][0].alarm_2 }}
                     </div>
                     <div class="col">
-                        {% if device_data[key][0]['data']['volt'] > 500 %}
+                        {% if device_data[device.device_mac][0].volt > 0.500 %}
                         <img src="{{ url_for('static', filename='images/icon/volt_green.png') }}" alt="" width=20px height=20px >
                         {% else %}
                         <img src="{{ url_for('static', filename='images/icon/volt_red.png') }}" alt="" width=20px height=20px >
                         {% endif %}                        
-                        {{ device_data[key][0]['data']['volt'] }}
+                        {{ device_data[device.device_mac][0].volt }}
                     </div><div class="col">
-                        {% if device_data[key][0]['data']['lte_rssi'] > -80 %}
+                        {% if device_data[device.device_mac][0].lte_rssi > -80 %}
                         <img src="{{ url_for('static', filename='images/icon/lte_rssi_green.png') }}" alt="" width=20px height=20px >
                         {% else %}
                         <img src="{{ url_for('static', filename='images/icon/lte_rssi_red.png') }}" alt="" width=20px height=20px >
                         {% endif %}
-                        {{ device_data[key][0]['data']['lte_rssi'] }}
+                        {{ device_data[device.device_mac][0].lte_rssi }}
                     </div>
                     </div>
                 {% endif %}
-            {% endfor %}
+            
         {% endif %}
     {% endfor %}
 </div>

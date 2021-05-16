@@ -42,40 +42,30 @@ class Device(db.Model):
     device_mac = db.Column(db.String(20), unique=True, nullable=False)
     devicetype = db.Column(db.String(50), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    data_trackingdevice = db.relationship('TrackingDeviceData', cascade='all, delete-orphan', backref='ref_trackingdevice', lazy=True)
-    data_firedevice = db.relationship('FireDeviceData', cascade='all, delete-orphan', backref='ref_firedevice', lazy=True)
-    trigger_trackingdevice = db.relationship('TrackingDeviceTrigger', cascade='all, delete-orphan', backref='trig_track', lazy=True)
-
-    
+    data_device = db.relationship('DeviceData', cascade='all, delete-orphan', backref='ref_data_device', lazy=True)
+    trigger_trackingdevice = db.relationship('TrackingDeviceTrigger', cascade='all, delete-orphan', backref='ref_trig_track', lazy=True)
+  
     
     def __repr__(self):
         return f"Device('{self.id}', '{self.devicetype}', '{self.device_mac}')"
     
-class TrackingDeviceData(db.Model):
+class DeviceData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime, nullable=True)
-    pos = db.Column(db.String(100), nullable=True)
+    geo = db.Column(db.String(100), nullable=True)
     temp = db.Column(db.Integer, nullable=True)
     humid = db.Column(db.Integer, nullable=True)
     hpa = db.Column(db.Integer, nullable=True)
     volt = db.Column(db.Integer, nullable=True)
     lte_rssi = db.Column(db.Integer, nullable=True)
-    device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False) 
-    
-    def __repr__(self):
-        return f"TrackingDeviceData('{self.timestamp}', '{self.pos}', '{self.temp}', '{self.humid}', '{self.hpa}', '{self.volt}', '{self.lte_rssi}')"
-
-class FireDeviceData(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    timestamp = db.Column(db.DateTime, nullable=True)
     alarm_1 = db.Column(db.Boolean, nullable=True)
     alarm_2 = db.Column(db.Boolean, nullable=True)
-    volt = db.Column(db.Integer, nullable=True)
-    lte_rssi = db.Column(db.Integer, nullable=True)
-    device_id = db.Column(db.Integer, db.ForeignKey('device.id'), nullable=False)
-
+    device_mac = db.Column(db.String(20), db.ForeignKey('device.device_mac'), nullable=False)
+     
+    
     def __repr__(self):
-        return f"FireDeviceData('{self.timestamp}', '{self.alarm_1}', '{self.alarm_2}', '{self.volt}', '{self.lte_rssi}')"
+        return f"'{self.timestamp}', '{self.geo}', '{self.temp}', '{self.humid}', '{self.hpa}', '{self.volt}', '{self.lte_rssi}','{self.alarm_1}','{self.alarm_2}'"
+
 
 class TrackingDeviceTrigger(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from iotrace import googlemaps
 from flask_googlemaps import Map
-from iotrace.models import Device, TrackingDeviceData 
+from iotrace.models import Device, DeviceData 
 
 plots = Blueprint('plots', __name__)
 
