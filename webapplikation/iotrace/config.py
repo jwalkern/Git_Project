@@ -18,4 +18,4 @@ class Config:
 	MQTT_BROKER = config.get('MQTT_BROKER')
 	MQTT_USER = config.get('MQTT_USER')
 	MQTT_PASS = config.get('MQTT_PASS')
-"""
+
