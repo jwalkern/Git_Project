@@ -223,32 +223,36 @@ def curl_device_alarm2(device_data, numbers_of_iteration=125):
 	return PNG 	 
 
 def curl_device_pos(device, device_data):
+	NULL = None
 	LatDec = ''
 	LngDec = ''
 	count = 0
 	label = device.devicename
 	icon = "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
 	for item in device_data:
-		if item.geo != '':
-			Lat = item.geo.split(',')[1].translate({ord(i): None for i in 'NS'})
-			LAT_DD = int(float(Lat)/100)
-			LAT_SS = float(Lat) - LAT_DD * 100
-			LatDec = LAT_DD + LAT_SS/60
-			if item.geo.find("S") != -1:
-				LatDec = LatDec * -1
+		try:
+			if item.geo != '':
+				Lat = item.geo.split(',')[1].translate({ord(i): None for i in 'NS'})
+				LAT_DD = int(float(Lat)/100)
+				LAT_SS = float(Lat) - LAT_DD * 100
+				LatDec = LAT_DD + LAT_SS/60
+				if item.geo.find("S") != -1:
+					LatDec = LatDec * -1
 
-			Lng = item.geo.split(',')[2].translate({ord(i): None for i in 'EW'})
-			LNG_DD = int(float(Lng)/100)
-			LNG_SS = float(Lng) - LNG_DD * 100
-			LngDec = LNG_DD + LNG_SS/60
-			if item.geo.find("W") != -1:
-				LngDec = LngDec * -1
-			if count > 10:
-				icon = "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
-				label = item.timestamp.strftime('%d-%m-%Y')
+				Lng = item.geo.split(',')[2].translate({ord(i): None for i in 'EW'})
+				LNG_DD = int(float(Lng)/100)
+				LNG_SS = float(Lng) - LNG_DD * 100
+				LngDec = LNG_DD + LNG_SS/60
+				if item.geo.find("W") != -1:
+					LngDec = LngDec * -1
+				if count > 10:
+					icon = "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+					label = item.timestamp.strftime('%d-%m-%Y')
 
-			break
-		else:
+				break
+			else:
+				count = count + 1
+		except:
 			count = count + 1
 
 	pos = f'lat:{LatDec}, lng:{LngDec}'
@@ -266,30 +270,33 @@ def curl_all_device_pos(devices):
 		icon = "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
 		if device.devicetype != 'fire':
 			for item in device_data[str(device.device_mac)]:
-				if item.geo != '':
-					Lat = item.geo.split(',')[1].translate({ord(i): None for i in 'NS'})
-					LAT_DD = int(float(Lat)/100)
-					LAT_SS = float(Lat) - LAT_DD * 100
-					LatDec = LAT_DD + LAT_SS/60
-					if item.geo.find("S") != -1:
-						LatDec = LatDec * -1
+				try:
+					if item.geo != '':
+						Lat = item.geo.split(',')[1].translate({ord(i): None for i in 'NS'})
+						LAT_DD = int(float(Lat)/100)
+						LAT_SS = float(Lat) - LAT_DD * 100
+						LatDec = LAT_DD + LAT_SS/60
+						if item.geo.find("S") != -1:
+							LatDec = LatDec * -1
 
-					Lng = item.geo.split(',')[2].translate({ord(i): None for i in 'EW'})
-					LNG_DD = int(float(Lng)/100)
-					LNG_SS = float(Lng) - LNG_DD * 100
-					LngDec = LNG_DD + LNG_SS/60
-					if item.geo.find("W") != -1:
-						LngDec = LngDec * -1
+						Lng = item.geo.split(',')[2].translate({ord(i): None for i in 'EW'})
+						LNG_DD = int(float(Lng)/100)
+						LNG_SS = float(Lng) - LNG_DD * 100
+						LngDec = LNG_DD + LNG_SS/60
+						if item.geo.find("W") != -1:
+							LngDec = LngDec * -1
 
-					pos = f'lat:{LatDec}, lng:{LngDec}'
-					label = device.devicename
-					if count > 10:
-						icon = "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
-						label = item.timestamp.strftime('%d-%m-%Y')
+						pos = f'lat:{LatDec}, lng:{LngDec}'
+						label = device.devicename
+						if count > 10:
+							icon = "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+							label = item.timestamp.strftime('%d-%m-%Y')
 
-					device_pos.append([pos, label, icon])
-					break
-				else:
+						device_pos.append([pos, label, icon])
+						break
+					else:
+						count = count + 1
+				except:
 					count = count + 1
 		else:
 			continue
