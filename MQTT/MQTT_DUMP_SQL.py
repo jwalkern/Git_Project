@@ -95,10 +95,13 @@ mqtt.Client.connected_flag=False
 mqtt.Client.bad_connection_flag=False
 mqtt.Client.disconnect_flag=False
 
+with open("/etc/config.json") as config_file:
+    config = json.load(config_file)
+
 #For Windows
-MQTT_BROKER = os.environ.get('MQTT_BROKER')
-MQTT_USER = os.environ.get('MQTT_USER')
-MQTT_PASS = os.environ.get('MQTT_PASS')
+MQTT_BROKER = config.get('MQTT_BROKER')
+MQTT_USER = config.get('MQTT_USER')
+MQTT_PASS = config.get('MQTT_PASS')
 
 port = 8883
 
