@@ -95,13 +95,19 @@ mqtt.Client.connected_flag=False
 mqtt.Client.bad_connection_flag=False
 mqtt.Client.disconnect_flag=False
 
-broker = os.environ.get('MQTT_BROKER')
+file = "C:/Users/Jwalkern/OneDrive/UCN/praktik/UTS/datadump/config.json"
+
+with open(file) as config_file:
+    config = json.load(config_file)
+MQTT_BROKER = config.get('MQTT_BROKER')
+MQTT_USER = config.get('MQTT_USER')
+MQTT_PASS = config.get('MQTT_PASS')
+
 port = 8883
-user = os.environ.get('MQTT_USER')
-password = os.environ.get('MQTT_PASS')
+
 
 client = mqtt.Client("ioTrace_test")
-client.username_pw_set(username=user, password=password)
+client.username_pw_set(username=MQTT_USER, password=MQTT_PASS)
 
 #For debuging
 #client.on_log = on_log
@@ -124,8 +130,8 @@ database = "D:/Git_projects/iotrace/webapplikation/iotrace/site.db"
 #Connectin to broker
 print("#######################################################################")
 try:
-    print("Connecting to broker: ", broker)
-    client.connect(broker, 8883)
+    print("Connecting to broker: ", MQTT_BROKER)
+    client.connect(MQTT_BROKER, 8883)
        
 except Exception:
     print("Failed to connect")
